@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Grafika_Projekt1"
         mc:Ignorable="d"
         Title="Prymitywy graficzne oraz kanwa" Height="650" Width="900">
+
     <Grid Name="MainGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -16,9 +17,21 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
+        <Menu Grid.Row="0" Grid.ColumnSpan="2" Name="Main_Menu"  
+              VerticalAlignment="Top" HorizontalAlignment="Left"  
+              Width="{Binding ElementName=MainGrid,Path=ActualWidth}"
+              RenderTransformOrigin="0.5,0.5" ScrollViewer.HorizontalScrollBarVisibility="Auto">
 
+            <!--Plik-->
+            <MenuItem Header="_Plik" VerticalAlignment="Center" >
+                <MenuItem Header="_Wczytaj" Click="Wczytaj_Click" />
+                <MenuItem Header="_Zapisz" Click="Zapisz_Click" />
+                <Separator/>
+                <MenuItem Header="_Wyjście" Click="Exit_Click" />
+            </MenuItem>
+        </Menu>
 
-        <Grid x:Name="Main" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Visible" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="620" Grid.RowSpan="2" Width="262" >
+        <Grid x:Name="Main" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Visible" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Height="602" Width="262" Margin="0,0.4,0,0" >
             <Border BorderBrush="Black" BorderThickness="2" Margin="0,0,-18,0">
                 <StackPanel Width="276" Orientation="Vertical" Margin="0.4,-0.6,-17.2,0.4" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" >
                     <StackPanel.RenderTransform>
@@ -72,10 +85,23 @@
                     </Grid>
                     <Button Grid.Column="0" Grid.Row="0" x:Name="DrawButton" Content="Rysuj" Height="24" Width="76" Click="Draw_Click" Margin="100,0" Grid.ColumnSpan="2" />
                     <Button Grid.Column="0" Grid.Row="0" x:Name="ResizeButton" Content="Edytuj" Height="24" Width="76" Click="Resize_Click" Grid.ColumnSpan="2" Margin="100,0" />
-
+                    <Label Content="Powiększenie obrazu" VerticalAlignment="Center" HorizontalAlignment="Center" Focusable="False" Margin="0,20,0,0"/>
+                    <Slider x:Name="zoom_slider" HorizontalAlignment="Center" ValueChanged="zoom_slider_ValueChanged" Orientation="Horizontal" Height="21" TickPlacement="None" Minimum="1" AutoToolTipPlacement="TopLeft"  Margin="0,0,0,10" Width="75"/>
                 </StackPanel>
             </Border>
         </Grid>
         <Canvas x:Name="canvas" Background="WhiteSmoke" Grid.Column="1" Grid.Row="1" MouseLeftButtonDown="MouseDown_Event" MouseMove="MouseMove_Event" MouseLeftButtonUp="MouseUp_Event" Margin="282,0,-0.4,0" />
+        <ScrollViewer Grid.Column="1" Grid.Row="1" Name="scrollViewer" Margin="282,0.4,-0.4,0"  CanContentScroll="True" 
+                      HorizontalAlignment="Left"  VerticalAlignment="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="#FFF0F0F0" Height="602" Width="612">
+            <Grid Name="ImageGrid"  HorizontalAlignment="Left" VerticalAlignment="Top" 
+                  Width="{Binding ElementName=image,Path=ActualWidth}" Height="{Binding ElementName=image,Path=ActualHeight}" >
+                <Grid.LayoutTransform>
+                    <TransformGroup>
+                        <ScaleTransform x:Name="scaleTransform"/>
+                    </TransformGroup>
+                </Grid.LayoutTransform>
+                <Image x:Name="image" HorizontalAlignment="Left" VerticalAlignment="Top" Cursor="Cross" Stretch="None" />
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </Window>

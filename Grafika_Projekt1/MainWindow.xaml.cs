@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,11 +27,16 @@ namespace Grafika_Projekt1
         bool FirstClick = true;
         bool Dragging = false, Resizing = false;
 
+        Uri filePath;
+        BitmapImage loadedImage;
+        System.Windows.Point? lastCenterPositionOnTarget;
+
         public MainWindow()
         {
             InitializeComponent();
         }
 
+        #region Drawing
         private void LineVisibility()
         {
             WspK.Visibility = Visibility.Visible;
@@ -41,7 +47,7 @@ namespace Grafika_Projekt1
             W.Visibility = Visibility.Hidden;
             Promień.Visibility = Visibility.Hidden;
             R.Visibility = Visibility.Hidden;
-           // ResizeButton.Visibility = Visibility.Hidden;
+            // ResizeButton.Visibility = Visibility.Hidden;
             //DrawButton.Visibility = Visibility.Visible;
         }
 
@@ -69,8 +75,8 @@ namespace Grafika_Projekt1
             W.Visibility = Visibility.Hidden;
             Promień.Visibility = Visibility.Visible;
             R.Visibility = Visibility.Visible;
-        //    ResizeButton.Visibility = Visibility.Hidden;
-          //  DrawButton.Visibility = Visibility.Visible;
+            //    ResizeButton.Visibility = Visibility.Hidden;
+            //  DrawButton.Visibility = Visibility.Visible;
         }
 
         private void Linia_Click(object sender, RoutedEventArgs e)
@@ -152,8 +158,8 @@ namespace Grafika_Projekt1
                     FirstClick = true;
                 }
             }
-           
-            
+
+
         }
 
         FrameworkElement figure;
@@ -205,7 +211,7 @@ namespace Grafika_Projekt1
                         Grubość.Text = "" + circle.StrokeThickness;
                     }
                 }
-                
+
             }
         }
 
@@ -242,7 +248,7 @@ namespace Grafika_Projekt1
                         }
                         else if (Resizing)
                         {
-                            if(X1 == line.X1)
+                            if (X1 == line.X1)
                             {
                                 line.X1 = X2;
                                 line.Y1 = Y2;
@@ -279,7 +285,7 @@ namespace Grafika_Projekt1
                         else if (Resizing)
                         {
                             double r;
-                            if(Canvas.GetLeft(circle) < Canvas.GetLeft(circle) - (X1 - X2))
+                            if (Canvas.GetLeft(circle) < Canvas.GetLeft(circle) - (X1 - X2))
                             {
                                 r = circle.Height / 2 - Math.Sqrt(Math.Pow((X1 - X2), 2) + Math.Pow((Y1 - Y2), 2));
                             }
@@ -320,7 +326,7 @@ namespace Grafika_Projekt1
         {
             X1 = Double.Parse(StartX.Text);
             Y1 = Double.Parse(StartY.Text);
-           
+
             T = int.Parse(Grubość.Text);
             switch (SelectedFigure)
             {
@@ -373,7 +379,7 @@ namespace Grafika_Projekt1
             Rectangle rectangle = new Rectangle();
             rectangle.StrokeThickness = T;
             rectangle.Stroke = System.Windows.Media.Brushes.Black;
-            rectangle.Height = Math.Max(Y1 - Y2, Y2 -Y1);
+            rectangle.Height = Math.Max(Y1 - Y2, Y2 - Y1);
             rectangle.Width = Math.Max(X1 - X2, X2 - X1);
             Canvas.SetLeft(rectangle, Math.Min(X1, X2));
             Canvas.SetTop(rectangle, Math.Min(Y1, Y2));
@@ -401,13 +407,88 @@ namespace Grafika_Projekt1
             circle.StrokeThickness = T;
             circle.Stroke = System.Windows.Media.Brushes.Black;
             double r = Math.Sqrt(Math.Pow((X1 - X2), 2) + Math.Pow((Y1 - Y2), 2));
-            circle.Height = r*2;
+            circle.Height = r * 2;
             circle.Width = circle.Height;
             Canvas.SetLeft(circle, X1 - r);
             Canvas.SetTop(circle, Y1 - r);
             circle.MouseLeftButtonDown += ChildMouseDown_Event;
             canvas.Children.Add(circle);
         }
-    }
+        #endregion
 
+        #region Plik
+        private void Wczytaj_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
+            openFileDialog.Title = "Wybierz obraz";
+            openFileDialog.Filter = "JPG|*.jpg;*.jpeg";
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                filePath = new Uri(openFileDialog.FileName);
+            }
+
+            loadedImage = new BitmapImage(filePath);
+            image.Source = loadedImage;
+        }
+
+        private void Zapisz_Click(object sender, RoutedEventArgs e)
+        {
+            if (image.Source == null)
+            {
+                System.Windows.MessageBox.Show("Aby zapisać, wczytaj obraz.", "Brak obrazu!");
+
+            }
+            else if (image.Source != null)
+            {
+                Microsoft.Win32.SaveFileDialog save = new Microsoft.Win32.SaveFileDialog();
+                save.Title = "Zapisywanie jako";
+                save.Filter = "JPEG (*.jpeg)|*.jpeg";
+                save.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+                BitmapEncoder encoder;
+
+                if (save.ShowDialog() == true)
+                {
+                    string ext = System.IO.Path.GetExtension(save.FileName);
+                    FileStream filestream = new FileStream(save.FileName, FileMode.Create);
+                    switch (ext)
+                    {
+                        case ".jpeg":
+                            encoder = new JpegBitmapEncoder();
+                            encoder.Frames.Add(BitmapFrame.Create((BitmapSource)image.Source));
+                            encoder.Save(filestream);
+                            break;
+                        case null:
+                            Console.WriteLine("Błąd zapisu pliku");
+                            break;
+                    }
+                    filestream.Close();
+                }
+            }
+        }
+        #endregion
+
+        #region Zoom
+        private void zoom_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
+            if (loadedImage != null)
+            {
+
+                scaleTransform.ScaleX = e.NewValue;
+                scaleTransform.ScaleY = e.NewValue;
+
+                var centerOfViewport = new System.Windows.Point((int)(scrollViewer.ViewportWidth / 2),
+                                                 (int)(scrollViewer.ViewportHeight / 2));
+                lastCenterPositionOnTarget = scrollViewer.TranslatePoint(centerOfViewport, ImageGrid);
+            }
+        }
+        #endregion
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Application.Current.Shutdown();
+        }
+    }
 }
