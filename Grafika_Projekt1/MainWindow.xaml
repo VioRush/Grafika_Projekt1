@@ -25,7 +25,11 @@
             <!--Plik-->
             <MenuItem Header="_Plik" VerticalAlignment="Center" >
                 <MenuItem Header="_Wczytaj" Click="Wczytaj_Click" />
-                <MenuItem Header="_Zapisz" Click="Zapisz_Click" />
+                <MenuItem Header="_Zapisz">
+                    <MenuItem Header="Wysoka jakość" Click="WysokaJakość_Click"/>
+                    <MenuItem Header="Średnia jakość" Click="ŚredniaJakość_Click"/>
+                    <MenuItem Header="Niska jakość" Click="NiskaJakość_Click"/>
+                </MenuItem>
                 <Separator/>
                 <MenuItem Header="_Wyjście" Click="Exit_Click" />
             </MenuItem>

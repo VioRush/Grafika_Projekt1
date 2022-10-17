@@ -30,6 +30,7 @@ namespace Grafika_Projekt1
         Uri filePath;
         BitmapImage loadedImage;
         System.Windows.Point? lastCenterPositionOnTarget;
+        int CompressionLevel;
 
         public MainWindow()
         {
@@ -432,7 +433,7 @@ namespace Grafika_Projekt1
             image.Source = loadedImage;
         }
 
-        private void Zapisz_Click(object sender, RoutedEventArgs e)
+        private void Zapisz()
         {
             if (image.Source == null)
             {
@@ -446,16 +447,18 @@ namespace Grafika_Projekt1
                 save.Filter = "JPEG (*.jpeg)|*.jpeg";
                 save.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-                BitmapEncoder encoder;
+                JpegBitmapEncoder encoder;
 
                 if (save.ShowDialog() == true)
                 {
                     string ext = System.IO.Path.GetExtension(save.FileName);
                     FileStream filestream = new FileStream(save.FileName, FileMode.Create);
+                    
                     switch (ext)
                     {
                         case ".jpeg":
                             encoder = new JpegBitmapEncoder();
+                            encoder.QualityLevel = CompressionLevel;
                             encoder.Frames.Add(BitmapFrame.Create((BitmapSource)image.Source));
                             encoder.Save(filestream);
                             break;
@@ -466,6 +469,24 @@ namespace Grafika_Projekt1
                     filestream.Close();
                 }
             }
+        }
+
+        private void WysokaJakość_Click(object sender, RoutedEventArgs e)
+        {
+            CompressionLevel = 99;
+            Zapisz();
+        }
+
+        private void ŚredniaJakość_Click(object sender, RoutedEventArgs e)
+        {
+            CompressionLevel = 50;
+            Zapisz();
+        }
+
+        private void NiskaJakość_Click(object sender, RoutedEventArgs e)
+        {
+            CompressionLevel = 1;
+            Zapisz();
         }
         #endregion
 
