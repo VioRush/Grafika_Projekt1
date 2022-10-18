@@ -699,6 +699,33 @@ namespace Grafika_Projekt1
         }
         #endregion
 
+        private void MouseDown_Event_Image(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                X1 = e.GetPosition(image).X;
+                Y1 = e.GetPosition(image).Y;
+                Bitmap bitmap = ImageToBitmap((BitmapSource)image.Source);
+                komunikat.Text = bitmap.GetPixel((int)X1, (int)Y1).ToString();
+            }
+        }
+
+        public Bitmap ImageToBitmap(BitmapSource bitmapSource)
+        {
+            if (bitmapSource != null)
+            {
+                var width = bitmapSource.PixelWidth;
+                var height = bitmapSource.PixelHeight;
+                var stride = width * ((bitmapSource.Format.BitsPerPixel + 7) / 8);
+                var memoryBlockPointer = Marshal.AllocHGlobal(height * stride);
+                bitmapSource.CopyPixels(new Int32Rect(0, 0, width, height), memoryBlockPointer, height * stride, stride);
+                var bitmap = new Bitmap(width, height, stride, System.Drawing.Imaging.PixelFormat.Format32bppPArgb, memoryBlockPointer);
+                return bitmap;
+            }
+            else
+                return null;
+        }
+
         public BitmapImage BitmapToImage(System.Drawing.Bitmap bitmap)
         {
             using (MemoryStream memory = new MemoryStream())
