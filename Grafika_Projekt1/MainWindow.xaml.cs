@@ -1,7 +1,10 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,6 +16,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Brushes = System.Windows.Media.Brushes;
+using Rectangle = System.Windows.Shapes.Rectangle;
 
 namespace Grafika_Projekt1
 {
@@ -26,6 +31,9 @@ namespace Grafika_Projekt1
         double X1, X2, Y1, Y2;
         bool FirstClick = true;
         bool Dragging = false, Resizing = false;
+        int width = -1, height = -1, maxValue = -1;
+        byte[] pixelBuffer;
+        int r, g, b, ratio;
 
         Uri filePath;
         BitmapImage loadedImage;
@@ -420,10 +428,35 @@ namespace Grafika_Projekt1
         #region Plik
         private void Wczytaj_Click(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
+            OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Title = "Wybierz obraz";
-            openFileDialog.Filter = "JPG|*.jpg;*.jpeg";
+            openFileDialog.Filter = "JPEG|*.jpeg|PPM|*.ppm";
 
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string filePath = System.IO.Path.GetExtension(openFileDialog.FileName);
+                if (filePath == ".ppm")
+                {
+                    OpenPPM(openFileDialog);
+                }
+                else if (filePath == ".jpeg")
+                {
+                    OpenJPEG(openFileDialog);
+                }
+                    
+            }
+
+            /* if (openFileDialog.ShowDialog() == true)
+             {
+                 filePath = new Uri(openFileDialog.FileName);
+             }
+
+             loadedImage = new BitmapImage(filePath);
+             image.Source = loadedImage;*/
+        }
+
+        private void OpenJPEG(OpenFileDialog openFileDialog)
+        {
             if (openFileDialog.ShowDialog() == true)
             {
                 filePath = new Uri(openFileDialog.FileName);
@@ -431,6 +464,165 @@ namespace Grafika_Projekt1
 
             loadedImage = new BitmapImage(filePath);
             image.Source = loadedImage;
+        }
+
+        private void OpenPPM(OpenFileDialog openFileDialog)
+        {
+            var file = File.ReadLines(openFileDialog.FileName);
+            var format = file.First();
+
+            int i = 1, r = -1, g=-1, b=-1;
+            int index;
+            List<String> values = new List<string>();
+
+            while (maxValue < 0)
+            {
+                String line = file.ElementAt(i);
+
+                if (line.Length <= 0)
+                {
+                    continue;
+                }
+
+                if ((index = line.IndexOf('#')) >= 0)  //usuwanie komentarzy
+                {
+                    Console.WriteLine(line);
+                    line = line.Remove(index);
+                    Console.WriteLine(line);
+                }
+
+                line = string.Join(" ", line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries));
+                values = string.IsNullOrWhiteSpace(line) ? new List<string>() : line.Split(' ').ToList();
+
+                if (values.Count() > 0 && width < 0)
+                {
+                    if (int.Parse(values[0]) > 0)
+                    {
+                        width = int.Parse(values[0]);
+                    }
+                    values.RemoveAt(0);
+                }
+
+                if (values.Count() > 0 && height < 0)
+                {
+                    if (int.Parse(values[0]) > 0)
+                    {
+                        height = int.Parse(values[0]);
+                    }
+                    values.RemoveAt(0);
+                }
+
+                if (values.Count() > 0 && maxValue < 0)
+                {
+                    if (int.Parse(values[0]) > 0)
+                    {
+                        maxValue = int.Parse(values[0]);
+                    }
+                    values.RemoveAt(0);
+                }
+
+                i++;
+            }
+
+            Console.WriteLine(height + "h");
+            Console.WriteLine(width + "w");
+            Console.WriteLine(maxValue + "m");
+
+            pixelBuffer = new byte[width * 3 * height];
+            int byteOffset = 0;
+            Bitmap resultBitmap = new Bitmap(width, height);
+
+            if (format == "P6")
+            {
+                values = new List<string>();
+                byte[] colorValues = new byte[9];
+
+                var fileStream = File.OpenRead(openFileDialog.FileName);
+                var streamReader = new StreamReader(fileStream, Encoding.UTF8);
+
+                int chars = 0, lines = 0;
+                while (lines < i)
+                {
+                    if ((char)streamReader.Read() == '\n')
+                    {
+                        lines++;
+                    }
+                    chars++;
+                }
+
+                fileStream.Seek(chars, SeekOrigin.Begin);
+
+                while (fileStream.Read(colorValues, 0, colorValues.Length) > 0)
+                {
+                    values = colorValues.Select(j => j.ToString()).ToList();
+
+                    while (values.Count > 0)
+                    {
+                        if (values.Count > 0 && r < 0)
+                        {
+                            if (int.Parse(values[0]) >= 0)
+                            {
+                                r = byte.Parse(values[0]);
+                            }
+                            values.RemoveAt(0);
+                        }
+
+                        if (values.Count > 0 && g < 0)
+                        {
+                            if (int.Parse(values[0]) >= 0)
+                            {
+                                g = byte.Parse(values[0]);
+                            }
+                            values.RemoveAt(0);
+                        }
+
+                        if (values.Count > 0 && b < 0)
+                        {
+                            if (int.Parse(values[0]) >= 0)
+                            {
+                                b = byte.Parse(values[0]);
+                            }
+                            values.RemoveAt(0);
+                        }
+
+                        if (r >= 0 && g >= 0 && b >= 0)
+                        {
+                            Scaling();
+                            pixelBuffer[byteOffset] = (byte)b;
+                            pixelBuffer[byteOffset + 1] = (byte)g;
+                            pixelBuffer[byteOffset + 2] = (byte)r;
+
+                            resultBitmap.SetPixel((byteOffset / 3) % width, ((byteOffset / 3) - (byteOffset / 3) % width) / width, System.Drawing.Color.FromArgb(r, g, b));
+                            //pixelBuffer[byteOffset + 3] = 255;
+                            r = -1;
+                            g = -1;
+                            b = -1;
+
+                            byteOffset = byteOffset + 3;
+                        }
+                    }
+                }
+
+            }
+
+            /*var resultData = resultBitmap.LockBits(new System.Drawing.Rectangle(0, 0,
+                                    resultBitmap.Width, resultBitmap.Height),
+                                       System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                                         System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            */
+
+           // Marshal.Copy(pixelBuffer, 0, resultData.Scan0, pixelBuffer.Length);
+            //resultBitmap.UnlockBits(resultData);
+            image.Source = BitmapToImage(resultBitmap);
+
+        }
+
+        private void Scaling()
+        {
+            ratio = 255 / maxValue;
+            r *= ratio;
+            g *= ratio;
+            b *= ratio;
         }
 
         private void Zapisz()
@@ -506,6 +698,21 @@ namespace Grafika_Projekt1
             }
         }
         #endregion
+
+        public BitmapImage BitmapToImage(System.Drawing.Bitmap bitmap)
+        {
+            using (MemoryStream memory = new MemoryStream())
+            {
+                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+                memory.Position = 0;
+                BitmapImage bitmapimage = new BitmapImage();
+                bitmapimage.BeginInit();
+                bitmapimage.StreamSource = memory;
+                bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapimage.EndInit();
+                return bitmapimage;
+            }
+        }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
