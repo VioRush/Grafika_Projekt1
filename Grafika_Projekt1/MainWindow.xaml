@@ -90,11 +90,13 @@
                     <Button Grid.Column="0" Grid.Row="0" x:Name="DrawButton" Content="Rysuj" Height="24" Width="76" Click="Draw_Click" Margin="100,0" Grid.ColumnSpan="2" />
                     <Button Grid.Column="0" Grid.Row="0" x:Name="ResizeButton" Content="Edytuj" Height="24" Width="76" Click="Resize_Click" Grid.ColumnSpan="2" Margin="100,0" />
                     <Label Content="Powiększenie obrazu" VerticalAlignment="Center" HorizontalAlignment="Center" Focusable="False" Margin="0,20,0,0"/>
-                    <Slider x:Name="zoom_slider" HorizontalAlignment="Center" ValueChanged="zoom_slider_ValueChanged" Orientation="Horizontal" Height="21" TickPlacement="None" Minimum="1" AutoToolTipPlacement="TopLeft"  Margin="0,0,0,10" Width="75"/>
+                    <Slider x:Name="zoom_slider" HorizontalAlignment="Center" ValueChanged="zoom_slider_ValueChanged" Orientation="Horizontal" Height="21" TickPlacement="None" Minimum="1" Maximum="100" AutoToolTipPlacement="TopLeft"  Margin="0,0,0,10" Width="75"/>
                 </StackPanel>
             </Border>
         </Grid>
-        <Canvas x:Name="canvas" Background="WhiteSmoke" Grid.Column="1" Grid.Row="1" MouseLeftButtonDown="MouseDown_Event" MouseMove="MouseMove_Event" MouseLeftButtonUp="MouseUp_Event" Margin="282,0,-0.4,0" />
+        <Canvas x:Name="canvas" Background="WhiteSmoke" Grid.Column="1" Grid.Row="1" MouseLeftButtonDown="MouseDown_Event" MouseMove="MouseMove_Event" MouseLeftButtonUp="MouseUp_Event" Margin="282,0,-0.4,0">
+            <TextBlock Canvas.Left="-235" TextWrapping="Wrap" Text="" Canvas.Top="437" Name="komunikat" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold"/>
+        </Canvas>
         <ScrollViewer Grid.Column="1" Grid.Row="1" Name="scrollViewer" Margin="282,0.4,-0.4,0"  CanContentScroll="True" 
                       HorizontalAlignment="Left"  VerticalAlignment="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="#FFF0F0F0" Height="602" Width="612">
             <Grid Name="ImageGrid"  HorizontalAlignment="Left" VerticalAlignment="Top" 
@@ -104,7 +106,7 @@
                         <ScaleTransform x:Name="scaleTransform"/>
                     </TransformGroup>
                 </Grid.LayoutTransform>
-                <Image x:Name="image" HorizontalAlignment="Left" VerticalAlignment="Top" Cursor="Cross" Stretch="None" />
+                <Image x:Name="image" HorizontalAlignment="Left" VerticalAlignment="Top" Cursor="Cross" Stretch="None" MouseDown="MouseDown_Event_Image" />
             </Grid>
         </ScrollViewer>
     </Grid>

@@ -443,6 +443,10 @@ namespace Grafika_Projekt1
                 {
                     OpenJPEG(openFileDialog);
                 }
+                else
+                {
+                    komunikat.Text = "Podano niedopuszczalny format pliku!";
+                }
                     
             }
 
@@ -471,16 +475,20 @@ namespace Grafika_Projekt1
             var file = File.ReadLines(openFileDialog.FileName);
             var format = file.First();
 
-            int i = 1, r = -1, g=-1, b=-1;
+            int i = 1;
+            r = -1; g = -1; b = -1;
+            width = -1; height = -1; maxValue = -1 ;
             int index;
             List<String> values = new List<string>();
+            String line;
 
             while (maxValue < 0)
             {
-                String line = file.ElementAt(i);
+                line = file.ElementAt(i);
 
                 if (line.Length <= 0)
                 {
+                    i++;
                     continue;
                 }
 
@@ -488,7 +496,6 @@ namespace Grafika_Projekt1
                 {
                     Console.WriteLine(line);
                     line = line.Remove(index);
-                    Console.WriteLine(line);
                 }
 
                 line = string.Join(" ", line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries));
@@ -532,8 +539,13 @@ namespace Grafika_Projekt1
             int byteOffset = 0;
             Bitmap resultBitmap = new Bitmap(width, height);
 
+           
+
+          //  pixelBuffer = new byte[data.Stride * data.Height];
+
             if (format == "P6")
             {
+      
                 values = new List<string>();
                 byte[] colorValues = new byte[9];
 
@@ -552,7 +564,7 @@ namespace Grafika_Projekt1
 
                 fileStream.Seek(chars, SeekOrigin.Begin);
 
-                while (fileStream.Read(colorValues, 0, colorValues.Length) > 0)
+                while (fileStream.Read(colorValues, 0, colorValues.Length) > 0 && byteOffset < pixelBuffer.Length)
                 {
                     values = colorValues.Select(j => j.ToString()).ToList();
 
@@ -562,7 +574,7 @@ namespace Grafika_Projekt1
                         {
                             if (int.Parse(values[0]) >= 0)
                             {
-                                r = byte.Parse(values[0]);
+                                r = int.Parse(values[0]);
                             }
                             values.RemoveAt(0);
                         }
@@ -571,7 +583,7 @@ namespace Grafika_Projekt1
                         {
                             if (int.Parse(values[0]) >= 0)
                             {
-                                g = byte.Parse(values[0]);
+                                g = int.Parse(values[0]);
                             }
                             values.RemoveAt(0);
                         }
@@ -580,7 +592,7 @@ namespace Grafika_Projekt1
                         {
                             if (int.Parse(values[0]) >= 0)
                             {
-                                b = byte.Parse(values[0]);
+                                b = int.Parse(values[0]);
                             }
                             values.RemoveAt(0);
                         }
@@ -588,11 +600,14 @@ namespace Grafika_Projekt1
                         if (r >= 0 && g >= 0 && b >= 0)
                         {
                             Scaling();
-                            pixelBuffer[byteOffset] = (byte)b;
-                            pixelBuffer[byteOffset + 1] = (byte)g;
-                            pixelBuffer[byteOffset + 2] = (byte)r;
+                            if (byteOffset >= pixelBuffer.Length - 1) break;
+                           // pixelBuffer[byteOffset] = (byte)b;
+                           // pixelBuffer[byteOffset + 1] = (byte)g;
+                           // pixelBuffer[byteOffset + 2] = (byte)r;
+                            int x = Math.Min((byteOffset / 3) % width, width - 1);
+                            int y = Math.Min(((byteOffset / 3) - (byteOffset / 3) % width) / width, height - 1);
 
-                            resultBitmap.SetPixel((byteOffset / 3) % width, ((byteOffset / 3) - (byteOffset / 3) % width) / width, System.Drawing.Color.FromArgb(r, g, b));
+                            resultBitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(r, g, b));
                             //pixelBuffer[byteOffset + 3] = 255;
                             r = -1;
                             g = -1;
@@ -603,26 +618,124 @@ namespace Grafika_Projekt1
                     }
                 }
 
+               // Marshal.Copy(pixelBuffer, 0, data.Scan0, pixelBuffer.Length);
+                //resultBitmap.UnlockBits(data);
             }
 
-            /*var resultData = resultBitmap.LockBits(new System.Drawing.Rectangle(0, 0,
-                                    resultBitmap.Width, resultBitmap.Height),
-                                       System.Drawing.Imaging.ImageLockMode.ReadWrite,
-                                         System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-            */
+            else if (format == "P3")
+            {
+                Console.WriteLine(file.Count());
 
-           // Marshal.Copy(pixelBuffer, 0, resultData.Scan0, pixelBuffer.Length);
-            //resultBitmap.UnlockBits(resultData);
-            image.Source = BitmapToImage(resultBitmap);
+                var fileStream = File.OpenRead(openFileDialog.FileName);
+                var streamReader = new StreamReader(fileStream, Encoding.UTF8);
+                char[] colors = new char[100];
 
+                int chars = 0, lines = 0;
+                while (lines < i)
+                {
+                    if ((char)streamReader.Read() == '\n')
+                    {
+                        lines++;
+                    }
+                    chars++;
+                }
+
+                fileStream.Seek(chars, SeekOrigin.Begin);
+                List <string> f = file.Skip(i).ToList();
+                //int index;
+                // int el = 0;
+               // file = file.Select(j => j.Remove(index).Where((index = j.IndexOf('#')) >= 0));
+                   
+                for (int el = 0; el < f.Count(); el++)
+                {
+                    if ((index = f.ElementAt(el).IndexOf('#')) >= 0)  //usuwanie komentarzy
+                    {
+                        var l = f.ElementAt(el);
+                        var n = f.ElementAt(el).Remove(index);
+                        Console.WriteLine(" n:" + f.ElementAt(el).Remove(index));
+                        f[el] = f.ElementAt(el).Remove(index);
+                    }
+                }
+                string test = String.Join(" ", f.Select(j => j.ToString()));
+                Console.WriteLine("testowy:" + test);
+
+
+                //while (!streamReader.EndOfStream) {
+
+                  //  streamReader.ReadBlock(colors, 0, colors.Length);
+                    //line = file.ElementAt(j);
+                   // line = "";
+                    //var new_line = new string(colors);
+                    line = test;
+                    
+                    
+                    line = string.Join(" ", line.Split(new char[] { ' ', '\t', '\n' }, StringSplitOptions.RemoveEmptyEntries));
+                    values = string.IsNullOrWhiteSpace(line) ? new List<string>() : line.Split(' ').ToList();
+
+                    Console.WriteLine(line);
+
+                    while (values.Count > 0)
+                    {
+                        if (values.Count > 0 && r < 0)
+                        {
+                            if (int.Parse(values[0]) >= 0)
+                            {
+                                r = int.Parse(values[0]);
+                            }
+                            values.RemoveAt(0);
+                        }
+
+                        if (values.Count > 0 && g < 0)
+                        {
+                            if (int.Parse(values[0]) >= 0)
+                            {
+                                g = int.Parse(values[0]);
+                            }
+                            values.RemoveAt(0);
+                        }
+
+                        if (values.Count > 0 && b < 0)
+                        {
+                            if (int.Parse(values[0]) >= 0)
+                            {
+                                b = int.Parse(values[0]);
+                            }
+                            values.RemoveAt(0);
+                        }
+
+                        if (r >= 0 && g >= 0 && b >= 0)
+                        {
+                            Scaling();
+                           // pixelBuffer[byteOffset] = (byte)b;
+                            //pixelBuffer[byteOffset + 1] = (byte)g;
+                            //pixelBuffer[byteOffset + 2] = (byte)r;
+                            int x = Math.Min((byteOffset / 3) % width, width - 1);
+                            int y = Math.Min(((byteOffset / 3) - (byteOffset / 3) % width) / width, height - 1);
+
+                            resultBitmap.SetPixel(x, y, System.Drawing.Color.FromArgb(r, g, b));
+                            //pixelBuffer[byteOffset + 3] = 255;
+                            r = -1;
+                            g = -1;
+                            b = -1;
+
+                            byteOffset = byteOffset + 3;
+                        }
+                    }
+               // }
+
+               
+            }
+
+            loadedImage = BitmapToImage(resultBitmap);
+            image.Source = loadedImage;
         }
 
         private void Scaling()
         {
-            ratio = 255 / maxValue;
-            r *= ratio;
-            g *= ratio;
-            b *= ratio;
+            ratio = Math.Max(((int)maxValue / 255) - 1, 1);
+            r /= ratio;
+            g /= ratio;
+            b /= ratio;
         }
 
         private void Zapisz()
@@ -712,6 +825,190 @@ namespace Grafika_Projekt1
                 bitmapimage.EndInit();
                 return bitmapimage;
             }
+        }
+
+        private void MouseDown_Event_Image(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                X1 = e.GetPosition(image).X;
+                Y1 = e.GetPosition(image).Y;
+                Bitmap bitmap = ImageToBitmap((BitmapSource)image.Source);
+                komunikat.Text = bitmap.GetPixel((int)X1, (int)Y1).ToString();
+            }
+        }
+
+        public Bitmap ImageToBitmap(BitmapSource bitmapSource)
+        {
+            if (bitmapSource != null)
+            {
+                var width = bitmapSource.PixelWidth;
+                var height = bitmapSource.PixelHeight;
+                var stride = width * ((bitmapSource.Format.BitsPerPixel + 7) / 8);
+                var memoryBlockPointer = Marshal.AllocHGlobal(height * stride);
+                bitmapSource.CopyPixels(new Int32Rect(0, 0, width, height), memoryBlockPointer, height * stride, stride);
+                var bitmap = new Bitmap(width, height, stride, System.Drawing.Imaging.PixelFormat.Format32bppPArgb, memoryBlockPointer);
+                return bitmap;
+            }
+            else
+                return null;
+        }
+
+        private void Button_Click_PPM_P3_P6(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
+            openFileDialog.Title = "Wybierz obraz";
+            openFileDialog.Filter = "PPM|*.ppm";
+            int byteOffset = 0;
+
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                var line = File.ReadLines(openFileDialog.FileName);
+                var p3_p6 = line.First();
+                int i = -1;
+                int max = 0;
+
+                foreach (var originalLine in line)
+                {
+                    string new_line = originalLine;
+
+                    i++;
+
+                    if (i == 0) continue;
+                    if (new_line.Length <= 0) continue;
+
+                    var whiteSpace = new List<string>();
+                    bool ws_bool = false;
+                    bool boolean = true;
+
+
+
+                    int hashtags;
+
+                    if (boolean)
+                    {
+                        hashtags = new_line.IndexOf('#');
+                        if (hashtags >= 0)
+                            new_line.Remove(hashtags, new_line.Length - hashtags);
+
+                        new_line = string.Join(" ", new_line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries));
+
+                        whiteSpace = string.IsNullOrWhiteSpace(new_line) ? new List<string>() : new_line.Split(' ').ToList();
+
+                        if (whiteSpace.Count > 0 && width < 0)
+                        {
+                            width = int.Parse(whiteSpace[0]);
+                            whiteSpace.RemoveAt(0);
+                        }
+
+                        if (whiteSpace.Count > 0 && height < 0)
+                        {
+                            height = int.Parse(whiteSpace[0]);
+                            whiteSpace.RemoveAt(0);
+                        }
+
+                        if (whiteSpace.Count > 0 && maxValue < 0)
+                        {
+                            max = int.Parse(whiteSpace[0]);
+                            whiteSpace.RemoveAt(0);
+                        }
+
+                        if (width != null && height != null && maxValue != null)
+                        {
+                            double bitmap_width = canvas.ActualWidth;
+                            double bitmap_height = canvas.ActualHeight;
+                            double x = 96, y = 96;
+
+                            pixelBuffer = new byte[(int)(width * 3 * height)];
+
+
+                            boolean = false;
+                            if (whiteSpace.Count > 0)
+                                ws_bool = true;
+                            else
+                                continue;
+                        }
+                    }
+                    if (!boolean || ws_bool)
+                    {
+                        if (p3_p6 == "P3")
+                        {
+
+                            var bytes = new List<byte>();
+                            long counts = 0;
+
+                            hashtags = new_line.IndexOf('#');
+                            if (hashtags >= 0)
+                                new_line = new_line.Remove(hashtags, new_line.Length - hashtags);
+
+                            new_line = string.Join(" ", new_line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries));
+
+                            if (!ws_bool)
+                                whiteSpace = string.IsNullOrWhiteSpace(new_line) ? new List<string>() : new_line.Split(' ').ToList();
+
+                            while (whiteSpace.Count > 0)
+                            {
+                                if (whiteSpace.Count > 0 && r < 0 )
+                                {
+                                    r = int.Parse(whiteSpace[0]);
+                                    whiteSpace.RemoveAt(0);
+                                }
+
+                                if (whiteSpace.Count > 0 && r < 0)
+                                {
+                                    g = int.Parse(whiteSpace[0]);
+                                    whiteSpace.RemoveAt(0);
+                                }
+
+                                if (whiteSpace.Count > 0 && r < 0)
+                                {
+                                    b = int.Parse(whiteSpace[0]);
+                                    whiteSpace.RemoveAt(0);
+                                }
+
+                                if (r >= 0 && g >= 0 && b >= 0)
+                                {
+                                    int range = Math.Max(((int)maxValue / 255) - 1, 1);
+                                    byte convertedR = (byte)(r / range);
+                                    byte convertedG = (byte)(g / range);
+                                    byte convertedB = (byte)(b / range);
+                                    pixelBuffer[byteOffset] = (byte)convertedB;
+                                    pixelBuffer[byteOffset + 1] = (byte)convertedG;
+                                    pixelBuffer[byteOffset + 2] = (byte)convertedR;
+                                    //pixelBuffer[byteOffset + 3] = 255;
+
+                                    r = -1;
+                                    g = -1;
+                                    b = -1;
+                                    byteOffset = byteOffset + 3;
+                                }
+                            }
+                        }
+                        else if (p3_p6 == "P6")
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            for(int k=0; k < pixelBuffer.Length; k++)
+            {
+                Console.WriteLine(pixelBuffer[k]);
+            }
+            Bitmap writableBitmap = new Bitmap(width, height);
+            var resultData = writableBitmap.LockBits(new System.Drawing.Rectangle(0, 0,
+                                    writableBitmap.Width, writableBitmap.Height),
+                                       System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                                         System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+
+
+            Marshal.Copy(pixelBuffer, 0, resultData.Scan0, pixelBuffer.Length);
+            writableBitmap.UnlockBits(resultData);
+            loadedImage = BitmapToImage(writableBitmap);
+            image.Source = BitmapToImage(writableBitmap);
+
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
