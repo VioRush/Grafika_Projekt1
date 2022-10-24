@@ -7,12 +7,13 @@
       
       xmlns:local="clr-namespace:Grafika_Projekt1"
       xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="Grafika_Projekt1.Page2"
-      mc:Ignorable="d" d:DesignWidth="800"
-      Title="Page2" Height="522">
+      mc:Ignorable="d"
+      Title="Page2" Height="616" Width="881">
 
     <Grid Background="Bisque" x:Name="MainGrid2">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -21,7 +22,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <Menu Grid.Row="0" Grid.ColumnSpan="2" x:Name="Main_Menu"  
+        <Menu Grid.Row="0" Grid.ColumnSpan="3" x:Name="Main_Menu"  
               VerticalAlignment="Top" HorizontalAlignment="Left"   
               Width="{Binding ActualWidth, ElementName=MainGrid2}"
               RenderTransformOrigin="0.5,0.5" ScrollViewer.HorizontalScrollBarVisibility="Auto">
@@ -65,7 +66,7 @@
                 <Slider HorizontalAlignment="Left" Margin="165,115,0,0" VerticalAlignment="Top" Width="102" Minimum="0" Maximum="255"/>
             </Grid>
         </Grid>
-        <Grid Grid.Row="2" Grid.Column="1" Margin="10,85,0,0">
+        <Grid Grid.Row="2" Grid.Column="1" Margin="10,85,10,0">
             <Label Content="CMYK" FontWeight="Bold" HorizontalAlignment="Left" Margin="131,10,0,0" VerticalAlignment="Top"/>
             <TextBox HorizontalAlignment="Left" Margin="57,42,0,0" TextWrapping="Wrap" Text="C" VerticalAlignment="Top" Width="33" Height="27"
                 TextAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="True"/>
@@ -88,6 +89,65 @@
                 TextAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="True"/>
             <Slider HorizontalAlignment="Left" Margin="156,150,0,0" VerticalAlignment="Top" Width="102" Minimum="0" Maximum="255"/>
 
+        </Grid>
+        <Grid Grid.Row="2" Grid.Column="2" Margin="10">
+            <ScrollBar x:Name="vScroll" HorizontalAlignment="Right" Orientation="Vertical" LargeChange="10" SmallChange="1" Minimum="-180" Maximum="180" Value="0" ValueChanged="ScrollBar_ValueChanged_Vertical" Margin="0,0,0,32"/>
+            <ScrollBar x:Name="hScroll" HorizontalAlignment="Left" VerticalAlignment="Bottom" Orientation="Horizontal" LargeChange="10" SmallChange="1" Minimum="-180" Maximum="180" Value="0" ValueChanged="ScrollBar_ValueChanged_Horizontal" Width="253"/>
+
+            <Viewport3D Margin="10,10,20,20">
+                <ModelVisual3D>
+                    <ModelVisual3D.Content>
+                        <Model3DGroup>
+                            <AmbientLight x:Name="ambientLight" Color="Red"/>
+                            <DirectionalLight Color="Green"
+                                              Direction="1,-2,-3"/>
+                            <DirectionalLight Color="Blue"
+                                              Direction="-1,2,3"/>
+                            <GeometryModel3D x:Name="Cube">
+                                <GeometryModel3D.Geometry>
+                                    <MeshGeometry3D Positions="
+                                                    -1,-1,-1   1,-1,-1    1,-1,1    -1,-1,1
+                                                    -1,-1,1    1,-1,1     1,1,1     -1,1,1
+                                                    1,-1,1     1,-1,-1    1,1,-1    1,1,1
+                                                    1,1,1      1,1,-1     -1,1,-1   -1,1,1
+                                                    -1,-1,1    -1,1,1     -1,1,-1   -1,-1,-1
+                                                    -1,-1,-1   -1,1,-1    1,1,-1    1,-1,-1
+                                                    "
+                                                    
+                                                    TriangleIndices="
+                                                    0 1 2      2 3 0
+                                                    4 5 6      6 7 4
+                                                    8 9 10     10 11 8
+                                                    12 13 14   14 15 12
+                                                    16 17 18   18 19 16
+                                                    20 21 22   22 23 20
+                                                    "
+                                                    
+                                                    />
+                                </GeometryModel3D.Geometry>
+                                <GeometryModel3D.Material>
+                                    <DiffuseMaterial Brush="White"/>
+                                </GeometryModel3D.Material>
+                            </GeometryModel3D>
+                        </Model3DGroup>
+                    </ModelVisual3D.Content>
+                </ModelVisual3D>
+                <ModelVisual3D>
+                    <ModelVisual3D.Content>
+                        <DirectionalLight x:Name="dirLightMain" Direction="-1,0,2" Color="Gray"/>
+                    </ModelVisual3D.Content>
+                </ModelVisual3D>
+                <Viewport3D.Camera>
+                    <PerspectiveCamera Position="2,4,6"
+                                       LookDirection="-1,-2,-3"
+                                       UpDirection="0,1,0"
+                                       FieldOfView="35">
+                    </PerspectiveCamera>
+                </Viewport3D.Camera>
+            </Viewport3D>
+
+            <Label x:Name="content_y" Content="" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Label x:Name="content_x" Content="" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         </Grid>
     </Grid>
 </Page>

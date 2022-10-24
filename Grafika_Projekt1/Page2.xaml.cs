@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Brushes = System.Windows.Media.Brushes;
@@ -28,12 +29,23 @@ namespace Grafika_Projekt1
         public Page2()
         {
             InitializeComponent();
-            RLabel_rgb.Text = "rabotajet";
+            HEXLabel.Text = "rabotajet";
+            ambientLight.Color = System.Windows.Media.Color.FromRgb(255,0,0);
         }
 
         private void Button_Click_Back(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page1());
+        }
+
+        private void ScrollBar_ValueChanged_Vertical(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Cube.Transform = new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(1,0,0), vScroll.Value));
+        }
+
+        private void ScrollBar_ValueChanged_Horizontal(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Cube.Transform = new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 1, 0), hScroll.Value));
         }
 
         private void colorPicker_MouseDown(object sender, Syncfusion.Windows.Tools.Controls.SelectedBrushChangedEventArgs e)
