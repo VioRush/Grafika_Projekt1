@@ -28,6 +28,7 @@ namespace Grafika_Projekt1
         public Page2()
         {
             InitializeComponent();
+            RLabel_rgb.Text = "rabotajet";
         }
 
         private void Button_Click_Back(object sender, RoutedEventArgs e)

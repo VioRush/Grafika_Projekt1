@@ -7,9 +7,8 @@
       
       xmlns:local="clr-namespace:Grafika_Projekt1"
       xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="Grafika_Projekt1.Page2"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="Page2">
+      mc:Ignorable="d" d:DesignWidth="800"
+      Title="Page2" Height="522">
 
     <Grid Background="Bisque" x:Name="MainGrid2">
         <Grid.ColumnDefinitions>
@@ -44,51 +43,50 @@
                 <DockPanel Margin="10">
                     <syncfusion:ColorPickerPalette Name="colorPicker" Color="Blue" HorizontalAlignment="Left" Height="30" Margin="20" VerticalAlignment="Top" Width="45" SelectedBrushChanged="colorPicker_MouseDown"/>
                     <TextBox Margin="20,20,0,20" Width="50" Text="HEX" TextAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="True" FontSize="15"/>
-                    <TextBox x:Name="CLabel" Margin="0,20,20,20" Width="100" TextAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Text=" "/>
+                    <TextBox x:Name="HEXLabel" Margin="0,20,20,20" Width="100" TextAlignment="Center" VerticalContentAlignment="Center" FontSize="15" Text=""/>
                 </DockPanel>
             </StackPanel>
-            <Grid>
-                <TextBox HorizontalAlignment="Left" Margin="74,105,0,0" TextWrapping="Wrap" Text="R" VerticalAlignment="Top" Width="33" Height="27"
+            <Grid Margin="0,75,0,0">
+                <Label Content="RGB" FontWeight="Bold" HorizontalAlignment="Left" Margin="148,10,0,0" VerticalAlignment="Top"/>
+                <TextBox HorizontalAlignment="Left" Margin="66,42,0,0" TextWrapping="Wrap" Text="R" VerticalAlignment="Top" Width="33" Height="27"
                          TextAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="True"/>
-                <TextBox HorizontalAlignment="Left" Margin="107,105,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="61" Height="27"
+                <TextBox x:Name="RLabel_rgb" HorizontalAlignment="Left" Margin="99,42,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="61" Height="27"
+                    TextAlignment="Center" VerticalContentAlignment="Center"/>
+                <TextBox HorizontalAlignment="Left" Margin="66,76,0,0" TextWrapping="Wrap" Text="G" VerticalAlignment="Top" Width="33" Height="27"
                     TextAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="True"/>
-                <TextBox HorizontalAlignment="Left" Margin="74,139,0,0" TextWrapping="Wrap" Text="G" VerticalAlignment="Top" Width="33" Height="27"
+                <TextBox x:Name="GLabel_rgb" HorizontalAlignment="Left" Margin="99,76,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="61" Height="27"
+                    TextAlignment="Center" VerticalContentAlignment="Center"/>
+                <TextBox HorizontalAlignment="Left" Margin="66,110,0,0" TextWrapping="Wrap" Text="B" VerticalAlignment="Top" Width="33" Height="27"
                     TextAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="True"/>
-                <TextBox HorizontalAlignment="Left" Margin="107,139,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="61" Height="27"
-                    TextAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="True"/>
-                <TextBox HorizontalAlignment="Left" Margin="74,173,0,0" TextWrapping="Wrap" Text="B" VerticalAlignment="Top" Width="33" Height="27"
-                    TextAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="True"/>
-                <TextBox HorizontalAlignment="Left" Margin="107,173,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="61" Height="27"
-                    TextAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="True"/>
-                <Slider HorizontalAlignment="Left" Margin="173,110,0,0" VerticalAlignment="Top" Width="102" Minimum="0" Maximum="255"/>
-                <Slider HorizontalAlignment="Left" Margin="173,144,0,0" VerticalAlignment="Top" Width="102" Minimum="0" Maximum="255"/>
-                <Slider HorizontalAlignment="Left" Margin="173,178,0,0" VerticalAlignment="Top" Width="102" Minimum="0" Maximum="255"/>
-                <Label Content="RGB" FontWeight="Bold" HorizontalAlignment="Left" Margin="148,74,0,0" VerticalAlignment="Top"/>
-
+                <TextBox x:Name="BLabel_rgb" HorizontalAlignment="Left" Margin="99,110,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="61" Height="27"
+                    TextAlignment="Center" VerticalContentAlignment="Center"/>
+                <Slider HorizontalAlignment="Left" Margin="165,47,0,0" VerticalAlignment="Top" Width="102" Minimum="0" Maximum="255"/>
+                <Slider HorizontalAlignment="Left" Margin="165,81,0,0" VerticalAlignment="Top" Width="102" Minimum="0" Maximum="255"/>
+                <Slider HorizontalAlignment="Left" Margin="165,115,0,0" VerticalAlignment="Top" Width="102" Minimum="0" Maximum="255"/>
             </Grid>
         </Grid>
-        <Grid Grid.Row="2" Grid.Column="1">
-            <TextBox HorizontalAlignment="Left" Margin="57,114,0,0" TextWrapping="Wrap" Text="C" VerticalAlignment="Top" Width="33" Height="27"
+        <Grid Grid.Row="2" Grid.Column="1" Margin="10,85,0,0">
+            <Label Content="CMYK" FontWeight="Bold" HorizontalAlignment="Left" Margin="131,10,0,0" VerticalAlignment="Top"/>
+            <TextBox HorizontalAlignment="Left" Margin="57,42,0,0" TextWrapping="Wrap" Text="C" VerticalAlignment="Top" Width="33" Height="27"
                 TextAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="True"/>
-            <TextBox HorizontalAlignment="Left" Margin="90,114,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="61" Height="27"
+            <TextBox x:Name="CLabel_cmyk" HorizontalAlignment="Left" Margin="90,42,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="61" Height="27"
+                TextAlignment="Center" VerticalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left" Margin="57,76,0,0" TextWrapping="Wrap" Text="M" VerticalAlignment="Top" Width="33" Height="27"
                 TextAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="True"/>
-            <TextBox HorizontalAlignment="Left" Margin="57,148,0,0" TextWrapping="Wrap" Text="M" VerticalAlignment="Top" Width="33" Height="27"
+            <TextBox x:Name="MLabel_cmyk" HorizontalAlignment="Left" Margin="90,76,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="61" Height="27"
+                TextAlignment="Center" VerticalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left" Margin="57,110,0,0" TextWrapping="Wrap" Text="Y" VerticalAlignment="Top" Width="33" Height="27"
                 TextAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="True"/>
-            <TextBox HorizontalAlignment="Left" Margin="90,148,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="61" Height="27"
+            <TextBox x:Name="YLabel_cmyk" HorizontalAlignment="Left" Margin="90,110,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="61" Height="27"
+                TextAlignment="Center" VerticalContentAlignment="Center"/>
+            <TextBox x:Name="BLabel_cmyk" HorizontalAlignment="Left" Margin="90,145,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="61" Height="27"
+                TextAlignment="Center" VerticalContentAlignment="Center"/>
+            <Slider HorizontalAlignment="Left" Margin="156,47,0,0" VerticalAlignment="Top" Width="102" Minimum="0" Maximum="255"/>
+            <Slider HorizontalAlignment="Left" Margin="156,81,0,0" VerticalAlignment="Top" Width="102" Minimum="0" Maximum="255"/>
+            <Slider HorizontalAlignment="Left" Margin="156,115,0,0" VerticalAlignment="Top" Width="102" Minimum="0" Maximum="255"/>
+            <TextBox HorizontalAlignment="Left" Margin="57,145,0,0" TextWrapping="Wrap" Text="B" VerticalAlignment="Top" Width="33" Height="27"
                 TextAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="True"/>
-            <TextBox HorizontalAlignment="Left" Margin="57,182,0,0" TextWrapping="Wrap" Text="Y" VerticalAlignment="Top" Width="33" Height="27"
-                TextAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="True"/>
-            <TextBox HorizontalAlignment="Left" Margin="90,182,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="61" Height="27"
-                TextAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="True"/>
-            <Slider HorizontalAlignment="Left" Margin="156,119,0,0" VerticalAlignment="Top" Width="102" Minimum="0" Maximum="255"/>
-            <Slider HorizontalAlignment="Left" Margin="156,153,0,0" VerticalAlignment="Top" Width="102" Minimum="0" Maximum="255"/>
-            <Slider HorizontalAlignment="Left" Margin="156,187,0,0" VerticalAlignment="Top" Width="102" Minimum="0" Maximum="255"/>
-            <Label Content="CMYK" FontWeight="Bold" HorizontalAlignment="Left" Margin="131,83,0,0" VerticalAlignment="Top"/>
-            <TextBox HorizontalAlignment="Left" Margin="57,216,0,0" TextWrapping="Wrap" Text="B" VerticalAlignment="Top" Width="33" Height="27"
-                TextAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="True"/>
-            <TextBox HorizontalAlignment="Left" Margin="90,216,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="61" Height="27"
-                TextAlignment="Center" VerticalContentAlignment="Center" IsReadOnly="True"/>
-            <Slider HorizontalAlignment="Left" Margin="156,221,0,0" VerticalAlignment="Top" Width="102" Minimum="0" Maximum="255"/>
+            <Slider HorizontalAlignment="Left" Margin="156,150,0,0" VerticalAlignment="Top" Width="102" Minimum="0" Maximum="255"/>
 
         </Grid>
     </Grid>
