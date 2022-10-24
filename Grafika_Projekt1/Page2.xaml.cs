@@ -9,6 +9,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -22,6 +23,8 @@ namespace Grafika_Projekt1
     /// </summary>
     public partial class Page2 : Page
     {
+        int r, g, b;
+
         public Page2()
         {
             InitializeComponent();
@@ -31,14 +34,19 @@ namespace Grafika_Projekt1
         {
             NavigationService.Navigate(new Page1());
         }
+
+        private void colorPicker_MouseDown(object sender, Syncfusion.Windows.Tools.Controls.SelectedBrushChangedEventArgs e)
+        {
+            r = colorPicker.Color.R;
+            g = colorPicker.Color.G;
+            b = colorPicker.Color.B;
+            rectangle.Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb((byte)r, (byte)g, (byte)b));
+            //CLabel.Text = string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b);
+        }
+
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
             System.Windows.Application.Current.Shutdown();
-        }
-
-        private void colorPicker_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            
         }
     }
 }
