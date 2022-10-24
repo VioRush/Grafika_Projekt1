@@ -1,9 +1,4 @@
-Grafika_Projekt1/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
-Grafika_Projekt1/obj/Debug/Grafika_Projekt1.csproj.AssemblyReference.cache
-Grafika_Projekt1/obj/Debug/Grafika_Projekt1_MarkupCompile.cache
-Grafika_Projekt1/obj/Debug/Grafika_Projekt1_MarkupCompile.lref
-Grafika_Projekt1/obj/Debug/MainWindow.baml
-Grafika_Projekt1/obj/Debug/Page1.baml
-Grafika_Projekt1/obj/Debug/Page2.baml
-Grafika_Projekt1/obj/Debug/Page2.g.cs
-Grafika_Projekt1/obj/Debug/Page2.g.i.cs
+Grafika_Projekt1/obj/Debug
+Grafika_Projekt1/bin/Debug
+
+.vs/Grafika_Projekt1/v17/
