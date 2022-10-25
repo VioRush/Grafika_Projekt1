@@ -87,10 +87,10 @@ namespace Grafika_Projekt1
            YLabel_cmyk.Text = "" + Math.Round(y, 2).ToString();
            KLabel_cmyk.Text = "" + Math.Round(k, 2).ToString();
            
-           cScroll.Value = c * 100;
-           mScroll.Value = m * 100;
-           yScroll.Value = y * 100;
-           kScroll.Value = k * 100;
+           cScroll.Value = Math.Round(c, 2) * 100;
+           mScroll.Value = Math.Round(m, 2) * 100;
+           yScroll.Value = Math.Round(y, 2) * 100;
+           kScroll.Value = Math.Round(k, 2) * 100;
             //ColorView.Background = new SolidColorBrush(System.Windows.Media.Color.);  //?
         }
 
