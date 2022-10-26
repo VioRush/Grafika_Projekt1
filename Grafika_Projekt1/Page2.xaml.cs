@@ -31,7 +31,6 @@ namespace Grafika_Projekt1
         public Page2()
         {
             InitializeComponent();
-            ambientLight.Color = System.Windows.Media.Color.FromRgb(255,0,0);
             BLabel_rgb.Text = "" + b.ToString();
             GLabel_rgb.Text = "" + g.ToString();
             RLabel_rgb.Text = "" + r.ToString();
@@ -40,6 +39,150 @@ namespace Grafika_Projekt1
             YLabel_cmyk.Text = "" + y.ToString();
             KLabel_cmyk.Text = "" + k.ToString();
             draw = true;
+            SetCubeColor();
+        }
+
+        private void SetCubeColor()
+        {
+            int red=256, blue=0;
+            Bitmap resultBitmap = new Bitmap(256, 256);
+
+
+            for (int i = 0; i < resultBitmap.Height; i++)
+            {
+                red--;
+                blue = 0;
+                for (int j = 0; j < resultBitmap.Width; j++)
+                {
+                    resultBitmap.SetPixel(j, i, System.Drawing.Color.FromArgb(red, 255, blue));
+                    blue++;
+                }
+            }
+
+           // rectangle.Fill = new ImageBrush { ImageSource = BitmapToImage(resultBitmap) };
+           fBrush.ImageSource = BitmapToImage(resultBitmap);
+
+            int green = -1;
+            blue = 0;
+
+
+            for (int i = 0; i < resultBitmap.Height; i++)
+            {
+                green++;
+                blue = 0;
+                for (int j = 0; j < resultBitmap.Width; j++)
+                {
+                    resultBitmap.SetPixel(j, i, System.Drawing.Color.FromArgb(255,green, blue));
+                    blue++;
+                }
+            }
+
+            // rectangle.Fill = new ImageBrush { ImageSource = BitmapToImage(resultBitmap) };
+            tpBrush.ImageSource = BitmapToImage(resultBitmap);
+
+            green = 256;
+            red = 0;
+
+
+            for (int i = 0; i < resultBitmap.Height; i++)
+            {
+                green--;
+                red = 0;
+                for (int j = 0; j < resultBitmap.Width; j++)
+                {
+                    resultBitmap.SetPixel(j, i, System.Drawing.Color.FromArgb(red, green, 255));
+                    red++;
+                }
+            }
+
+            // rectangle.Fill = new ImageBrush { ImageSource = BitmapToImage(resultBitmap) };
+            bBrush.ImageSource = BitmapToImage(resultBitmap);
+            //CubeBrush.ImageSou
+
+            green = -1;
+            red = 0;
+
+
+            for (int i = 0; i < resultBitmap.Height; i++)
+            {
+                green++;
+                red = 0;
+                for (int j = 0; j < resultBitmap.Width; j++)
+                {
+                    resultBitmap.SetPixel(j, i, System.Drawing.Color.FromArgb(red, green, 0));
+                    red++;
+                }
+            }
+
+            // rectangle.Fill = new ImageBrush { ImageSource = BitmapToImage(resultBitmap) };
+            lbBrush.ImageSource = BitmapToImage(resultBitmap);
+
+            green = 256;
+            blue = 0;
+
+
+            for (int i = 0; i < resultBitmap.Height; i++)
+            {
+                green--;
+                blue = 0;
+                for (int j = 0; j < resultBitmap.Width; j++)
+                {
+                    resultBitmap.SetPixel(j, i, System.Drawing.Color.FromArgb(0, green, blue));
+                    blue++;
+                }
+            }
+
+            // rectangle.Fill = new ImageBrush { ImageSource = BitmapToImage(resultBitmap) };
+            nBrush.ImageSource = BitmapToImage(resultBitmap);
+
+            red = -1;
+            blue = 0;
+
+
+            for (int i = 0; i < resultBitmap.Height; i++)
+            {
+                red++;
+                blue = 0;
+                for (int j = 0; j < resultBitmap.Width; j++)
+                {
+                    resultBitmap.SetPixel(j, i, System.Drawing.Color.FromArgb(red, 0, blue));
+                    blue++;
+                }
+            }
+
+            // rectangle.Fill = new ImageBrush { ImageSource = BitmapToImage(resultBitmap) };
+            CubeBrush.ImageSource = BitmapToImage(resultBitmap);
+        }
+
+        public BitmapImage BitmapToImage(System.Drawing.Bitmap bitmap)
+        {
+            using (MemoryStream memory = new MemoryStream())
+            {
+                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+                memory.Position = 0;
+                BitmapImage bitmapimage = new BitmapImage();
+                bitmapimage.BeginInit();
+                bitmapimage.StreamSource = memory;
+                bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapimage.EndInit();
+                return bitmapimage;
+            }
+        }
+
+        public Bitmap ImageToBitmap(BitmapSource bitmapSource)
+        {
+            if (bitmapSource != null)
+            {
+                var width = bitmapSource.PixelWidth;
+                var height = bitmapSource.PixelHeight;
+                var stride = width * ((bitmapSource.Format.BitsPerPixel + 7) / 8);
+                var memoryBlockPointer = Marshal.AllocHGlobal(height * stride);
+                bitmapSource.CopyPixels(new Int32Rect(0, 0, width, height), memoryBlockPointer, height * stride, stride);
+                var bitmap = new Bitmap(width, height, stride, System.Drawing.Imaging.PixelFormat.Format32bppPArgb, memoryBlockPointer);
+                return bitmap;
+            }
+            else
+                return null;
         }
 
         #region RGB&CMYK
@@ -291,6 +434,11 @@ namespace Grafika_Projekt1
         private void ScrollBar_ValueChanged_Vertical(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             Cube.Transform = new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(1,0,0), vScroll.Value));
+        }
+
+        private void front_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
         }
 
         private void ScrollBar_ValueChanged_Horizontal(object sender, RoutedPropertyChangedEventArgs<double> e)

@@ -10,7 +10,7 @@ namespace Grafika_Projekt1
         public MainWindow()
         {
             InitializeComponent();
-            MainFrame.Content = new Page1();
+            MainFrame.Content = new Page2();
         }
     }
 }

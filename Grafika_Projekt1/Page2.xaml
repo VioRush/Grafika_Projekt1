@@ -97,20 +97,19 @@
             <Viewport3D Margin="10,10,20,20">
                 <ModelVisual3D>
                     <ModelVisual3D.Content>
-                        <Model3DGroup>
-                            <AmbientLight x:Name="ambientLight" Color="Red"/>
-                            <DirectionalLight Color="Green"
-                                              Direction="1,-2,-3"/>
-                            <DirectionalLight Color="Blue"
-                                              Direction="-1,2,3"/>
-                            <GeometryModel3D x:Name="Cube">
+                        <Model3DGroup x:Name="Cube">
+                            <AmbientLight x:Name="ambientLight" Color="White"/>
+                            <DirectionalLight Color="White"/>
+
+                            <GeometryModel3D>
+
                                 <GeometryModel3D.Geometry>
-                                    <MeshGeometry3D Positions="
-                                                    -1,-1,-1   1,-1,-1    1,-1,1    -1,-1,1
-                                                    -1,-1,1    1,-1,1     1,1,1     -1,1,1
-                                                    1,-1,1     1,-1,-1    1,1,-1    1,1,1
-                                                    1,1,1      1,1,-1     -1,1,-1   -1,1,1
-                                                    -1,-1,1    -1,1,1     -1,1,-1   -1,-1,-1
+                                    <MeshGeometry3D x:Name="mesh" Positions="
+                                                    
+                                                    
+                                                    
+                                                    
+                                                   
                                                     -1,-1,-1   -1,1,-1    1,1,-1    1,-1,-1
                                                     "
                                                     
@@ -118,30 +117,150 @@
                                                     0 1 2      2 3 0
                                                     4 5 6      6 7 4
                                                     8 9 10     10 11 8
-                                                    12 13 14   14 15 12
-                                                    16 17 18   18 19 16
-                                                    20 21 22   22 23 20
                                                     "
                                                     
+                                                    TextureCoordinates="0,0 0,1 1,1 1,0"
                                                     />
                                 </GeometryModel3D.Geometry>
                                 <GeometryModel3D.Material>
-                                    <DiffuseMaterial Brush="White"/>
+                                    <DiffuseMaterial>
+                                        <DiffuseMaterial.Brush>
+
+                                            <ImageBrush x:Name="CubeBrush" ImageSource="wysj.jpeg"/>
+                                        </DiffuseMaterial.Brush>
+                                    </DiffuseMaterial>
+
                                 </GeometryModel3D.Material>
                             </GeometryModel3D>
+                            <GeometryModel3D x:Name="CTop">
+                                <GeometryModel3D.Geometry>
+                                    <MeshGeometry3D Positions="
+                                                    1,1,1      1,1,-1     -1,1,-1   -1,1,1
+                                                    "
+                                                    
+                                                    TriangleIndices="
+                                                    0 1 2      2 3 0
+                                                    "
+                                                    
+                                                    TextureCoordinates="
+                                                                        1,1 1,0 0,0 0,1"
+                                                    />
+                                </GeometryModel3D.Geometry>
+                                <GeometryModel3D.Material>
+                                    <DiffuseMaterial>
+                                        <DiffuseMaterial.Brush>
+
+                                            <ImageBrush x:Name="tpBrush" ImageSource="wysj.jpeg"/>
+                                        </DiffuseMaterial.Brush>
+                                    </DiffuseMaterial>
+
+                                </GeometryModel3D.Material>
+                            </GeometryModel3D>
+                            <GeometryModel3D x:Name="front" >
+                                <GeometryModel3D.Geometry>
+                                    <MeshGeometry3D Positions="
+                                                    -1,-1,1    1,-1,1     1,1,1     -1,1,1
+                                                    "
+                                                    
+                                                    TriangleIndices="
+                                                    0 1 2      2 3 0
+                                                    "
+                                                    
+                                                    TextureCoordinates="
+                                                                        0,1 1,1 1,0 0,0"
+                                                    />
+                                </GeometryModel3D.Geometry>
+                                <GeometryModel3D.Material>
+                                    <DiffuseMaterial>
+                                        <DiffuseMaterial.Brush>
+
+                                            <ImageBrush x:Name="fBrush" ImageSource="wysj.jpeg"/>
+                                        </DiffuseMaterial.Brush>
+                                    </DiffuseMaterial>
+
+                                </GeometryModel3D.Material>
+                            </GeometryModel3D>
+                            <GeometryModel3D x:Name="bok">
+                                <GeometryModel3D.Geometry>
+                                    <MeshGeometry3D Positions="
+                                                    1,-1,1     1,-1,-1    1,1,-1    1,1,1 
+                                                    "
+                                                    
+                                                    TriangleIndices="
+                                                    0 1 2      2 3 0
+                                                    "
+                                                    
+                                                    TextureCoordinates="
+                                                                        0,0 0,1 1,1 1,0"
+                                                    />
+                                </GeometryModel3D.Geometry>
+                                <GeometryModel3D.Material>
+                                    <DiffuseMaterial>
+                                        <DiffuseMaterial.Brush>
+
+                                            <ImageBrush x:Name="bBrush" ImageSource="wysj.jpeg"/>
+                                        </DiffuseMaterial.Brush>
+                                    </DiffuseMaterial>
+
+                                </GeometryModel3D.Material>
+                            </GeometryModel3D>
+                            <GeometryModel3D x:Name="niz">
+                                <GeometryModel3D.Geometry>
+                                    <MeshGeometry3D Positions="
+                                                   -1,-1,-1   1,-1,-1    1,-1,1    -1,-1,1
+                                                    "
+                                                    
+                                                    TriangleIndices="
+                                                    0 1 2      2 3 0
+                                                    "
+                                                    
+                                                    TextureCoordinates="
+                                                                        0,1 1,1 1,0 0,0"
+                                                    />
+                                </GeometryModel3D.Geometry>
+                                <GeometryModel3D.Material>
+                                    <DiffuseMaterial>
+                                        <DiffuseMaterial.Brush>
+
+                                            <ImageBrush x:Name="nBrush" ImageSource="wysj.jpeg"/>
+                                        </DiffuseMaterial.Brush>
+                                    </DiffuseMaterial>
+
+                                </GeometryModel3D.Material>
+                            </GeometryModel3D>
+                            <GeometryModel3D x:Name="lb">
+                                <GeometryModel3D.Geometry>
+                                    <MeshGeometry3D Positions="
+                                                    -1,-1,1    -1,1,1     -1,1,-1   -1,-1,-1
+                                                    "
+                                                    
+                                                    TriangleIndices="
+                                                    0 1 2      2 3 0
+                                                    "
+                                                    
+                                                    TextureCoordinates="
+                                                                        0,1 1,1 1,0 0,0"
+                                                    />
+                                </GeometryModel3D.Geometry>
+                                <GeometryModel3D.Material>
+                                    <DiffuseMaterial>
+                                        <DiffuseMaterial.Brush>
+
+                                            <ImageBrush x:Name="lbBrush" ImageSource="wysj.jpeg"/>
+                                        </DiffuseMaterial.Brush>
+                                    </DiffuseMaterial>
+
+                                </GeometryModel3D.Material>
+                            </GeometryModel3D>
+                            
                         </Model3DGroup>
-                    </ModelVisual3D.Content>
-                </ModelVisual3D>
-                <ModelVisual3D>
-                    <ModelVisual3D.Content>
-                        <DirectionalLight x:Name="dirLightMain" Direction="-1,0,2" Color="Gray"/>
                     </ModelVisual3D.Content>
                 </ModelVisual3D>
                 <Viewport3D.Camera>
                     <PerspectiveCamera Position="2,4,6"
                                        LookDirection="-1,-2,-3"
                                        UpDirection="0,1,0"
-                                       FieldOfView="35">
+                                       FieldOfView="30">
                     </PerspectiveCamera>
                 </Viewport3D.Camera>
             </Viewport3D>
