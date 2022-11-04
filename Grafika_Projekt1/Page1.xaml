@@ -113,6 +113,9 @@
                         <TextBox Grid.Column="0" Grid.Row="0" Name="Wymiar" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="75"/>
                         <Button Grid.Row="0" Content="Medianowy" HorizontalAlignment="Left" Height="23" Margin="100,10,0,0" VerticalAlignment="Top" Width="87" Click="Medianowy_Click"/>
                     </Grid>
+                    <Button Grid.Row="0" Content="Wygładzający" HorizontalAlignment="Left" Height="23" Margin="100,10,0,0" VerticalAlignment="Top" Width="87" Click="Wygladzajacy_Click"/>
+
+                    
                 </StackPanel>
             </Border>
         </Grid>

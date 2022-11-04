@@ -457,10 +457,7 @@ namespace Grafika_Projekt1
 
         private void OpenJPEG(OpenFileDialog openFileDialog)
         {
-            if (openFileDialog.ShowDialog() == true)
-            {
-                filePath = new Uri(openFileDialog.FileName);
-            }
+            Uri path = new Uri(openFileDialog.FileName);
 
             loadedImage = new BitmapImage(filePath);
             image.Source = loadedImage;
@@ -891,7 +888,7 @@ namespace Grafika_Projekt1
 
         #endregion
 
-        #region Filters
+        #region Operations
 
         private void Dodanie(object sender, RoutedEventArgs e)
         {
@@ -1014,6 +1011,10 @@ namespace Grafika_Projekt1
 
         }
 
+        #endregion
+
+        #region Filters
+
         private void Medianowy_Click(object sender, RoutedEventArgs e)
         {
             int size;
@@ -1088,6 +1089,102 @@ namespace Grafika_Projekt1
             Marshal.Copy(resultBuffer, 0, resultData.Scan0, resultBuffer.Length);
             resultBitmap.UnlockBits(resultData);
 
+            return resultBitmap;
+        }
+
+        private void Wygladzajacy_Click(object sender, RoutedEventArgs e)
+        {
+            BitmapCopy();
+            Bitmap temp = UsredniajacyFilter(copy);
+            image2.Source = BitmapToImage(temp);
+        }
+
+        private Bitmap UsredniajacyFilter(Bitmap bitmap)
+        {
+            var data = copy.LockBits(new System.Drawing.Rectangle(0, 0,
+                                        copy.Width, copy.Height),
+                                       System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                                         System.Drawing.Imaging.PixelFormat.Format32bppRgb);
+
+
+            byte[] pixelBuffer = new byte[data.Stride * data.Height];
+            byte[] resultBuffer = new byte[data.Stride * data.Height];
+
+
+            Marshal.Copy(data.Scan0, pixelBuffer, 0, pixelBuffer.Length);
+            copy.UnlockBits(data);
+
+            double blue = 0.0;
+            double green = 0.0;
+            double red = 0.0;
+
+            int filterWidth = 3;
+            int filterHeight = 3;
+
+            int filterOffset = (filterWidth - 1) / 2;
+            int calcOffset = 0;
+
+            int byteOffset = 0;
+
+            for (int offsetY = filterOffset; offsetY < copy.Height - filterOffset; offsetY++)
+            {
+                for (int offsetX = filterOffset; offsetX < copy.Width - filterOffset; offsetX++)
+                {
+                    blue = 0;
+                    green = 0;
+                    red = 0;
+
+                    byteOffset = offsetY * data.Stride + offsetX * 4;
+
+                    for (int filterY = -filterOffset; filterY <= filterOffset; filterY++)
+                    {
+                        for (int filterX = -filterOffset; filterX <= filterOffset; filterX++)
+                        {
+                            calcOffset = byteOffset + (filterX * 4) + (filterY * data.Stride);
+
+                            blue += pixelBuffer[calcOffset];
+                            green += pixelBuffer[calcOffset + 1];
+                            red += pixelBuffer[calcOffset + 2];
+                        }
+                    }
+
+                    blue = 1.0 * blue / 9;
+                    green = 1.0 * green / 9;
+                    red = 1.0 * red / 9;
+
+                    if (blue > 255)
+                    { blue = 255; }
+                    else if (blue < 0)
+                    { blue = 0; }
+
+                    if (green > 255)
+                    { green = 255; }
+                    else if (green < 0)
+                    { green = 0; }
+
+                    if (red > 255)
+                    { red = 255; }
+                    else if (red < 0)
+                    { red = 0; }
+
+                    resultBuffer[byteOffset] = (byte)(blue);
+                    resultBuffer[byteOffset + 1] = (byte)(green);
+                    resultBuffer[byteOffset + 2] = (byte)(red);
+                    resultBuffer[byteOffset + 3] = 255;
+                }
+            }
+
+
+
+            Bitmap resultBitmap = new Bitmap(copy.Width, copy.Height);
+            var resultData = resultBitmap.LockBits(new System.Drawing.Rectangle(0, 0,
+                                    resultBitmap.Width, resultBitmap.Height),
+                                       System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                                         System.Drawing.Imaging.PixelFormat.Format32bppRgb);
+
+
+            Marshal.Copy(resultBuffer, 0, resultData.Scan0, resultBuffer.Length);
+            resultBitmap.UnlockBits(resultData);
             return resultBitmap;
         }
 
