@@ -37,6 +37,7 @@ namespace Grafika_Projekt1
         int CompressionLevel;
         int jasnosc = 0;
         Bitmap copy;
+        char dzialanie;
 
         public Page1()
         {
@@ -805,6 +806,7 @@ namespace Grafika_Projekt1
                 lastCenterPositionOnTarget = scrollViewer.TranslatePoint(centerOfViewport, ImageGrid);
             }
         }
+
         #endregion
 
         #region Jasnosc
@@ -891,20 +893,131 @@ namespace Grafika_Projekt1
 
         #region Filters
 
+        private void Dodanie(object sender, RoutedEventArgs e)
+        {
+            dzialanie = '+';
+            DoOp();
+        }
+
+        private void Usuwanie(object sender, RoutedEventArgs e)
+        {
+            dzialanie = '-';
+            DoOp();
+        }
+
+        private void Mnożenie(object sender, RoutedEventArgs e)
+        {
+            dzialanie = '*';
+            DoOp();
+        }
+
+        private void Dzielenie(object sender, RoutedEventArgs e)
+        {
+            dzialanie = '/';
+            DoOp();
+        }
+
+        private void DoOp()
+        {
+            BitmapCopy();
+            float w = float.Parse(Wartosc.Text);
+            byte[] LUT = new byte[256];
+
+            var data = copy.LockBits(
+                new System.Drawing.Rectangle(0, 0, copy.Width, copy.Height),
+                System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                System.Drawing.Imaging.PixelFormat.Format24bppRgb
+            );
+            var copyData = new byte[data.Stride * data.Height];
+
+            switch (dzialanie)
+            {
+                case '+':
+                    for (int i = 0; i < 256; i++)
+                    {
+                        if ((w + i) > 255)
+                        {
+                            LUT[i] = 255;
+                        }
+                        else
+                        {
+                            LUT[i] = (byte)(w + i);
+                        }
+                    }
+                    break;
+
+                case '-':
+                    for (int i = 0; i < 256; i++)
+                    {
+                        if ((i - w) < 0)
+                        {
+                            LUT[i] = 0;
+                        }
+                        else
+                        {
+                            LUT[i] = (byte)(i - w);
+                        }
+                    }
+                    break;
+
+                case '*':
+                    for (int i = 0; i < 256; i++)
+                    {
+                        if ((w * i) > 255)
+                        {
+                            LUT[i] = 255;
+                        }
+                        else if ((w * i) < 0)
+                        {
+                            LUT[i] = 0;
+                        }
+                        else
+                        {
+                            LUT[i] = (byte)(w * i);
+                        }
+                    }
+                    break;
+
+                case '/':
+                    for (int i = 0; i < 256; i++)
+                    {
+                        if ((i / w) > 255)
+                        {
+                            LUT[i] = 255;
+                        }
+                        else if ((i / w) < 0)
+                        {
+                            LUT[i] = 0;
+                        }
+                        else
+                        {
+                            LUT[i] = (byte)(i / w);
+                        }
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+
+            Marshal.Copy(data.Scan0, copyData, 0, copyData.Length);
+            for (int i = 0; i < copyData.Length; i++)
+            {
+                copyData[i] = LUT[copyData[i]];
+            }
+
+            Marshal.Copy(copyData, 0, data.Scan0, copyData.Length);
+            copy.UnlockBits(data);
+            BitmapImage im = BitmapToImage(copy);
+            image2.Source = im;
+
+        }
+
         private void Medianowy_Click(object sender, RoutedEventArgs e)
         {
             int size;
             size = int.Parse(Wymiar.Text);
             BitmapCopy();
-            /*Bitmap copy;
-            using (MemoryStream ms = new MemoryStream())
-            {
-                BitmapEncoder enc = new BmpBitmapEncoder();
-                enc.Frames.Add(BitmapFrame.Create(loadedImage));
-                enc.Save(ms);
-                Bitmap loaded = new Bitmap(ms);
-                copy = new Bitmap(loaded);
-            }*/
             Bitmap temp = MedianFilter(copy, size);
             image2.Source = BitmapToImage(temp);
         }

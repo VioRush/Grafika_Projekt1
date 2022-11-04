@@ -51,7 +51,7 @@
                         </TransformGroup>
                     </StackPanel.RenderTransform>
 
-                    <Grid Height="224" Background="Bisque">
+                    <Grid Height="190" Background="Bisque">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition/>
@@ -59,7 +59,6 @@
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition MinHeight="40"/>
-                            <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
@@ -91,15 +90,24 @@
                         <TextBox Grid.Column="1" Grid.Row="4" x:Name="Grubość" VerticalAlignment="Center" TextAlignment="Center" Text="1"
                                      HorizontalAlignment="Center" Margin="32.6,11.8,13.2,7" Width="31" Height="18"/>
                     </Grid>
-                    <Button Grid.Column="0" Grid.Row="0" x:Name="DrawButton" Content="Rysuj" Height="24" Width="76" Click="Draw_Click" Margin="100,0" Grid.ColumnSpan="2" />
-                    <Button Grid.Column="0" Grid.Row="0" x:Name="ResizeButton" Content="Edytuj" Height="24" Width="76" Click="Resize_Click" Grid.ColumnSpan="2" Margin="100,0" />
-                    <Label Content="Powiększenie obrazu" VerticalAlignment="Center" HorizontalAlignment="Center" Focusable="False" Margin="0,20,0,0"/>
+                    <Grid>
+                        <Button Grid.Column="0" Grid.Row="0" x:Name="DrawButton" Content="Rysuj" Height="24" Width="76" Click="Draw_Click" Margin="53,0,147,0" />
+                        <Button Grid.Row="0" x:Name="ResizeButton" Content="Edytuj" Height="24" Width="76" Click="Resize_Click" Margin="147,0,53,0" />
+                    </Grid>
+                    <Label Content="Powiększenie obrazu" VerticalAlignment="Center" HorizontalAlignment="Center" Focusable="False" Margin="78,10,78,0"/>
                     <Slider x:Name="zoom_slider" HorizontalAlignment="Center" ValueChanged="zoom_slider_ValueChanged" Orientation="Horizontal" Height="21" TickPlacement="None" Minimum="1" Maximum="100" AutoToolTipPlacement="TopLeft"  Margin="0,0,0,10" Width="75"/>
                     <Grid>
                         <Label Grid.Column="0" Grid.Row="0" Content="Jasność" HorizontalAlignment="Left" Margin="30,0,0,0" VerticalAlignment="Top" Width="50"/>
                         <Slider Grid.Row="0" x:Name="Jasnosc"  HorizontalAlignment="Left" Margin="85,5,0,0" VerticalAlignment="Top" Width="98"  IsSnapToTickEnabled="True"
     TickFrequency="1" RenderTransformOrigin="-0.689,0.545" Minimum="-10" ValueChanged="slider_jasnosc"/>
                         <Label Grid.Row="0" Name="value" Content="0" HorizontalAlignment="Left" Margin="197,0,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.072,0.283"/>
+                    </Grid>
+                    <Grid>
+                        <TextBox Grid.Column="0" Grid.Row="0" Name="Wartosc" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="75"/>
+                        <Button Grid.Column="1" Grid.Row="0" Content="+" HorizontalAlignment="Left" Height="23" Margin="100,10,0,0" VerticalAlignment="Top" Width="30" FontSize="15" Click="Dodanie"/>
+                        <Button Grid.Column="2" Grid.Row="0" Content="-" HorizontalAlignment="Left" Height="23" Margin="140,10,0,0" VerticalAlignment="Top" Width="30" FontSize="17" Click="Usuwanie"/>
+                        <Button Grid.Column="1" Grid.Row="0" Content="*" HorizontalAlignment="Left" Height="23" Margin="180,10,0,0" VerticalAlignment="Top" Width="30" FontSize="20" Click="Mnożenie"/>
+                        <Button Grid.Column="2" Grid.Row="0" Content="/" HorizontalAlignment="Left" Height="23" Margin="220,10,0,0" VerticalAlignment="Top" Width="30" FontSize="17" Click="Dzielenie"/>
                     </Grid>
                     <Grid>
                         <TextBox Grid.Column="0" Grid.Row="0" Name="Wymiar" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="75"/>
@@ -125,9 +133,9 @@
                 <Image x:Name="image2" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Cross" Stretch="None" Height="500" Width="470"/>
 
             </Grid>
-            
+
         </ScrollViewer>
-        
+
         <Frame Name="MainFrame" Background="White" NavigationUIVisibility="Hidden"/>
     </Grid>
 </Page>
