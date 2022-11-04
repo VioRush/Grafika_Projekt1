@@ -30,7 +30,7 @@
                     <MenuItem Header="Średnia jakość" Click="ŚredniaJakość_Click"/>
                     <MenuItem Header="Niska jakość" Click="NiskaJakość_Click"/>
                 </MenuItem>
-                
+
                 <Separator/>
                 <MenuItem Header="_Wyjście" Click="Exit_Click" />
             </MenuItem>
@@ -95,6 +95,12 @@
                     <Button Grid.Column="0" Grid.Row="0" x:Name="ResizeButton" Content="Edytuj" Height="24" Width="76" Click="Resize_Click" Grid.ColumnSpan="2" Margin="100,0" />
                     <Label Content="Powiększenie obrazu" VerticalAlignment="Center" HorizontalAlignment="Center" Focusable="False" Margin="0,20,0,0"/>
                     <Slider x:Name="zoom_slider" HorizontalAlignment="Center" ValueChanged="zoom_slider_ValueChanged" Orientation="Horizontal" Height="21" TickPlacement="None" Minimum="1" Maximum="100" AutoToolTipPlacement="TopLeft"  Margin="0,0,0,10" Width="75"/>
+                    <Grid>
+                        <Label Grid.Column="0" Grid.Row="0" Content="Jasność" HorizontalAlignment="Left" Margin="30,0,0,0" VerticalAlignment="Top" Width="50"/>
+                        <Slider Grid.Row="0" x:Name="Jasnosc"  HorizontalAlignment="Left" Margin="85,5,0,0" VerticalAlignment="Top" Width="98"  IsSnapToTickEnabled="True"
+    TickFrequency="1" RenderTransformOrigin="-0.689,0.545" Minimum="-10" ValueChanged="slider_jasnosc"/>
+                        <Label Grid.Row="0" Name="value" Content="0" HorizontalAlignment="Left" Margin="197,0,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.072,0.283"/>
+                    </Grid>
                 </StackPanel>
             </Border>
         </Grid>

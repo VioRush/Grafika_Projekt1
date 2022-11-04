@@ -35,6 +35,7 @@ namespace Grafika_Projekt1
         BitmapImage loadedImage;
         System.Windows.Point? lastCenterPositionOnTarget;
         int CompressionLevel;
+        int jasnosc = 0;
 
         public Page1()
         {
@@ -426,7 +427,8 @@ namespace Grafika_Projekt1
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Title = "Wybierz obraz";
-            openFileDialog.Filter = "JPEG|*.jpeg|PPM|*.ppm";
+            openFileDialog.Filter = "BMP|*.bmp|GIF|*.gif|JPEG|*.jpg;*.jpeg|PPM|*.ppm|PNG|*.png|TIFF|*.tif;*.tiff|"
+       + "All Graphics Types|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff";
 
             if (openFileDialog.ShowDialog() == true)
             {
@@ -435,13 +437,9 @@ namespace Grafika_Projekt1
                 {
                     OpenPPM(openFileDialog);
                 }
-                else if (filePath == ".jpeg")
-                {
-                    OpenJPEG(openFileDialog);
-                }
                 else
                 {
-                    komunikat.Text = "Podano niedopuszczalny format pliku!";
+                    OpenJPEG(openFileDialog);
                 }
 
             }
@@ -806,6 +804,88 @@ namespace Grafika_Projekt1
                 lastCenterPositionOnTarget = scrollViewer.TranslatePoint(centerOfViewport, ImageGrid);
             }
         }
+        #endregion
+
+        #region Jasnosc
+        private void slider_jasnosc(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            value.Content = Jasnosc.Value.ToString();
+            int pom = jasnosc;
+
+            jasnosc = (int)Jasnosc.Value;
+            byte[] LUT = new byte[256];
+
+            double b = Math.Pow(jasnosc, 2);
+            double d = -(Math.Pow(jasnosc, 2));
+
+            if (jasnosc - pom > 0)
+            {
+                for (int i = 0; i < 256; i++)
+                {
+                    if ((b + i) > 255)
+                    {
+                        LUT[i] = 255;
+                    }
+                    else if ((b + i) < 0)
+                    {
+                        LUT[i] = 0;
+                    }
+                    else
+                    {
+                        LUT[i] = (byte)((int)b + i);
+                    }
+                }
+
+
+            }
+            else
+            {
+                for (int i = 0; i < 256; i++)
+                {
+                    if ((d + i) > 255)
+                    {
+                        LUT[i] = 255;
+                    }
+                    else if ((d + i) < 0)
+                    {
+                        LUT[i] = 0;
+                    }
+                    else
+                    {
+                        LUT[i] = (byte)(d + i);
+                    }
+                }
+
+            }
+
+            Bitmap copy;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                BitmapEncoder enc = new BmpBitmapEncoder();
+                enc.Frames.Add(BitmapFrame.Create(loadedImage));
+                enc.Save(ms);
+                Bitmap loaded = new Bitmap(ms);
+                copy = new Bitmap(loaded);
+            }
+            var data = copy.LockBits(
+                new System.Drawing.Rectangle(0, 0, copy.Width, copy.Height),
+                System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                System.Drawing.Imaging.PixelFormat.Format24bppRgb
+            );
+            var copyData = new byte[data.Stride * data.Height];
+
+            Marshal.Copy(data.Scan0, copyData, 0, copyData.Length);
+            for (int i = 0; i < copyData.Length; i++)
+            {
+                copyData[i] = LUT[copyData[i]];
+            }
+
+            Marshal.Copy(copyData, 0, data.Scan0, copyData.Length);
+            copy.UnlockBits(data);
+            BitmapImage im = BitmapToImage(copy);
+            image.Source = im;
+        }
+
         #endregion
 
         public Bitmap ImageToBitmap(BitmapSource bitmapSource)
