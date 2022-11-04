@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Grafika_Projekt1"
       mc:Ignorable="d"
-      Title="Page1" Height="616" Width="881">
+      Title="Page1" Height="616" Width="1281">
 
     <Grid Name="MainGrid">
         <Grid.ColumnDefinitions>
@@ -101,6 +101,10 @@
     TickFrequency="1" RenderTransformOrigin="-0.689,0.545" Minimum="-10" ValueChanged="slider_jasnosc"/>
                         <Label Grid.Row="0" Name="value" Content="0" HorizontalAlignment="Left" Margin="197,0,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.072,0.283"/>
                     </Grid>
+                    <Grid>
+                        <TextBox Grid.Column="0" Grid.Row="0" Name="Wymiar" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="75"/>
+                        <Button Grid.Row="0" Content="Medianowy" HorizontalAlignment="Left" Height="23" Margin="100,10,0,0" VerticalAlignment="Top" Width="87" Click="Medianowy_Click"/>
+                    </Grid>
                 </StackPanel>
             </Border>
         </Grid>
@@ -108,18 +112,22 @@
             <TextBlock Canvas.Left="-235" TextWrapping="Wrap" Text="" Canvas.Top="437" Name="komunikat" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold"/>
         </Canvas>
 
-        <ScrollViewer Grid.Column="1" Grid.Row="1" Name="scrollViewer" Margin="282,0.4,-0.4,0"  CanContentScroll="True" 
-                      HorizontalAlignment="Left"  VerticalAlignment="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="#FFF0F0F0" Height="602" Width="612">
-            <Grid Name="ImageGrid"  HorizontalAlignment="Left" VerticalAlignment="Top" 
-                  Width="{Binding ElementName=image,Path=ActualWidth}" Height="{Binding ElementName=image,Path=ActualHeight}" >
+        <ScrollViewer Grid.Column="1" Grid.Row="1" Name="scrollViewer" Margin="282,0.4,-0.2,-4"  CanContentScroll="True" 
+                      HorizontalAlignment="Left"  VerticalAlignment="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="#FFF0F0F0" Height="602" Width="999">
+            <Grid Name="ImageGrid"  HorizontalAlignment="Left" VerticalAlignment="Center" 
+                  Width="989" Height="500" >
                 <Grid.LayoutTransform>
                     <TransformGroup>
                         <ScaleTransform x:Name="scaleTransform"/>
                     </TransformGroup>
                 </Grid.LayoutTransform>
-                <Image x:Name="image" HorizontalAlignment="Left" VerticalAlignment="Top" Cursor="Cross" Stretch="None" MouseDown="MouseDown_Event_Image"/>
+                <Image x:Name="image" HorizontalAlignment="Left" VerticalAlignment="Top" Cursor="Cross" Stretch="None" MouseDown="MouseDown_Event_Image" Height="500" Width="470"/>
+                <Image x:Name="image2" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Cross" Stretch="None" Height="500" Width="470"/>
+
             </Grid>
+            
         </ScrollViewer>
+        
         <Frame Name="MainFrame" Background="White" NavigationUIVisibility="Hidden"/>
     </Grid>
 </Page>

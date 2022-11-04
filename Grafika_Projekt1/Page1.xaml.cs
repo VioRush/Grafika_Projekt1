@@ -36,6 +36,7 @@ namespace Grafika_Projekt1
         System.Windows.Point? lastCenterPositionOnTarget;
         int CompressionLevel;
         int jasnosc = 0;
+        Bitmap copy;
 
         public Page1()
         {
@@ -888,6 +889,96 @@ namespace Grafika_Projekt1
 
         #endregion
 
+        #region Filters
+
+        private void Medianowy_Click(object sender, RoutedEventArgs e)
+        {
+            int size;
+            size = int.Parse(Wymiar.Text);
+            BitmapCopy();
+            /*Bitmap copy;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                BitmapEncoder enc = new BmpBitmapEncoder();
+                enc.Frames.Add(BitmapFrame.Create(loadedImage));
+                enc.Save(ms);
+                Bitmap loaded = new Bitmap(ms);
+                copy = new Bitmap(loaded);
+            }*/
+            Bitmap temp = MedianFilter(copy, size);
+            image2.Source = BitmapToImage(temp);
+        }
+
+        private Bitmap MedianFilter(Bitmap bitmap, int matrixSize)
+        {
+            Bitmap source = bitmap;
+            var data = source.LockBits(
+               new System.Drawing.Rectangle(0, 0, source.Width, source.Height),
+               System.Drawing.Imaging.ImageLockMode.ReadWrite,
+               System.Drawing.Imaging.PixelFormat.Format32bppRgb
+           );
+
+            byte[] pixelBuffer = new byte[data.Stride * data.Height];
+            byte[] resultBuffer = new byte[data.Stride * data.Height];
+
+            Marshal.Copy(data.Scan0, pixelBuffer, 0, pixelBuffer.Length);
+            source.UnlockBits(data);
+
+
+            int filterOffset = (matrixSize - 1) / 2;
+            int calcOffset = 0;
+            int byteOffset = 0;
+
+            List<int> neighbourPixels = new List<int>();
+            byte[] middlePixel;
+
+            for (int offsetY = filterOffset; offsetY <
+                source.Height - filterOffset; offsetY++)
+            {
+                for (int offsetX = filterOffset; offsetX <
+                    source.Width - filterOffset; offsetX++)
+                {
+                    byteOffset = offsetY * data.Stride + offsetX * 4;
+
+                    neighbourPixels.Clear();
+
+                    for (int filterY = -filterOffset; filterY <= filterOffset; filterY++)
+                    {
+                        for (int filterX = -filterOffset; filterX <= filterOffset; filterX++)
+                        {
+                            calcOffset = byteOffset + (filterX * 4) + (filterY * data.Stride);
+
+                            neighbourPixels.Add(BitConverter.ToInt32(pixelBuffer, calcOffset));
+                        }
+                    }
+
+                    neighbourPixels.Sort();
+
+                    middlePixel = BitConverter.GetBytes(neighbourPixels[neighbourPixels.Count / 2]);
+
+                    resultBuffer[byteOffset] = middlePixel[0];
+                    resultBuffer[byteOffset + 1] = middlePixel[1];
+                    resultBuffer[byteOffset + 2] = middlePixel[2];
+                    resultBuffer[byteOffset + 3] = middlePixel[3];
+                }
+            }
+
+            Bitmap resultBitmap = new Bitmap(source.Width, source.Height);
+
+            var resultData = resultBitmap.LockBits(new System.Drawing.Rectangle(0, 0,
+                       resultBitmap.Width, resultBitmap.Height),
+                        System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                        System.Drawing.Imaging.PixelFormat.Format32bppRgb);
+
+
+            Marshal.Copy(resultBuffer, 0, resultData.Scan0, resultBuffer.Length);
+            resultBitmap.UnlockBits(resultData);
+
+            return resultBitmap;
+        }
+
+        #endregion
+
         public Bitmap ImageToBitmap(BitmapSource bitmapSource)
         {
             if (bitmapSource != null)
@@ -916,6 +1007,18 @@ namespace Grafika_Projekt1
                 bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
                 bitmapimage.EndInit();
                 return bitmapimage;
+            }
+        }
+
+        private void BitmapCopy()
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                BitmapEncoder enc = new BmpBitmapEncoder();
+                enc.Frames.Add(BitmapFrame.Create(loadedImage));
+                enc.Save(ms);
+                Bitmap loaded = new Bitmap(ms);
+                copy = new Bitmap(loaded);
             }
         }
 
