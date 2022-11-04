@@ -920,7 +920,7 @@ namespace Grafika_Projekt1
         private void DoOp()
         {
             BitmapCopy();
-            float w = float.Parse(Wartosc.Text);
+            int w = Int32.Parse(Wartosc.Text);
             byte[] LUT = new byte[256];
 
             var data = copy.LockBits(
@@ -981,17 +981,18 @@ namespace Grafika_Projekt1
                 case '/':
                     for (int i = 0; i < 256; i++)
                     {
-                        if ((i / w) > 255)
+                        float w2 = w * (float)1;
+                        if ((i / w2) > 255)
                         {
                             LUT[i] = 255;
                         }
-                        else if ((i / w) < 0)
+                        else if ((i / w2) < 0)
                         {
                             LUT[i] = 0;
                         }
                         else
                         {
-                            LUT[i] = (byte)(i / w);
+                            LUT[i] = (byte)(i / w2);
                         }
                     }
                     break;
