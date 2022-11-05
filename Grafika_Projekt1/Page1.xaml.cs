@@ -459,7 +459,7 @@ namespace Grafika_Projekt1
         {
             Uri path = new Uri(openFileDialog.FileName);
 
-            loadedImage = new BitmapImage(filePath);
+            loadedImage = new BitmapImage(path);
             image.Source = loadedImage;
         }
 
