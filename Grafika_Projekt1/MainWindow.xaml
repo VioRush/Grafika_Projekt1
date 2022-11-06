@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Grafika_Projekt1"
         mc:Ignorable="d"
-        Title="Prymitywy graficzne oraz kanwa" Height="650" Width="900">
+        Title="Prymitywy graficzne oraz kanwa" Height="650" Width="1281">
 
     <Frame Name="MainFrame" Background="White" NavigationUIVisibility="Hidden"/>
 </Window>

@@ -103,6 +103,10 @@
                         <Label Grid.Row="0" Name="value" Content="0" HorizontalAlignment="Left" Margin="197,0,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.072,0.283"/>
                     </Grid>
                     <Grid>
+
+                        <Button Grid.Row="0" Content="Skala szarości" HorizontalAlignment="Left" Height="23" Margin="100,10,0,0" VerticalAlignment="Top" Width="87" Click="SkalaSzarosci_Click"/>
+                    </Grid>
+                    <Grid>
                         <TextBox Grid.Column="0" Grid.Row="0" Name="Wartosc" HorizontalAlignment="Left" Height="23" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="75"/>
                         <Button Grid.Column="1" Grid.Row="0" Content="+" HorizontalAlignment="Left" Height="23" Margin="100,10,0,0" VerticalAlignment="Top" Width="30" FontSize="15" Click="Dodanie"/>
                         <Button Grid.Column="2" Grid.Row="0" Content="-" HorizontalAlignment="Left" Height="23" Margin="140,10,0,0" VerticalAlignment="Top" Width="30" FontSize="17" Click="Usuwanie"/>
@@ -114,8 +118,17 @@
                         <Button Grid.Row="0" Content="Medianowy" HorizontalAlignment="Left" Height="23" Margin="100,10,0,0" VerticalAlignment="Top" Width="87" Click="Medianowy_Click"/>
                     </Grid>
                     <Button Grid.Row="0" Content="Wygładzający" HorizontalAlignment="Left" Height="23" Margin="100,10,0,0" VerticalAlignment="Top" Width="87" Click="Wygladzajacy_Click"/>
+                    <Grid>
+                        <Button Grid.Row="0" Content="Sobel" HorizontalAlignment="Left" Height="23" Margin="100,10,0,0" VerticalAlignment="Top" Width="87" Click="Sobel_Click"/>
+                    </Grid>
+                    <Grid>
+                        <Button Grid.Row="0" Content="Górnoprzepustowy wyostrzający" HorizontalAlignment="Left" Height="23" Margin="57,10,0,0" VerticalAlignment="Top" Width="175" Click="HighPass_Click"/>
+                    </Grid>
+                    <Grid>
+                        <Button Grid.Row="0" Content="Rozmycie gaussowskie" HorizontalAlignment="Left" Height="23" Margin="77,10,0,0" VerticalAlignment="Top" Width="132" Click="Gaussian_Click"/>
+                    </Grid>
 
-                    
+
                 </StackPanel>
             </Border>
         </Grid>

@@ -8,7 +8,7 @@
       xmlns:local="clr-namespace:Grafika_Projekt1"
       xmlns:syncfusion="http://schemas.syncfusion.com/wpf" x:Class="Grafika_Projekt1.Page2"
       mc:Ignorable="d"
-      Title="Page2" Height="616" Width="881">
+      Title="Page2" Height="616" Width="1281">
 
     <Grid Background="Bisque" x:Name="MainGrid2">
         <Grid.ColumnDefinitions>

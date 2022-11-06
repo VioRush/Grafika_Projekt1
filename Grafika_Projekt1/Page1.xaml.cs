@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -30,6 +31,7 @@ namespace Grafika_Projekt1
         int width = -1, height = -1, maxValue = -1;
         byte[] pixelBuffer;
         int r, g, b, ratio;
+        int[,] red, green, blue, grey;
 
         Uri filePath;
         BitmapImage loadedImage;
@@ -1011,6 +1013,57 @@ namespace Grafika_Projekt1
 
         }
 
+        public void SkalaSzarosci_Click(object sender, RoutedEventArgs e)
+        {
+            BitmapCopy();
+            Bitmap temp = SkalaSzarosci(copy);
+            image2.Source = BitmapToImage(temp);
+        }
+
+        public Bitmap SkalaSzarosci(Bitmap bitmap)
+        {
+            Bitmap source = bitmap;
+            for (var i = 0; i < source.Width; i++)
+            {
+                for (var j = 0; j < source.Height; j++)
+                {
+                    Color pixel = source.GetPixel(i, j);
+                    int r, g, b;
+
+                    r = pixel.R;
+                    g = pixel.G;
+                    b = pixel.B;
+                    r = (int)(0.21 * r + 0.71 * g + 0.07 * b);
+                    
+                    source.SetPixel(i, j, Color.FromArgb(r, r, r));
+                }
+            }
+
+            return source;
+        }
+
+        public Bitmap SkalaSzarosci2(Bitmap bitmap)
+        {
+            Bitmap source = bitmap;
+            for (var i = 0; i < source.Width; i++)
+            {
+                for (var j = 0; j < source.Height; j++)
+                {
+                    Color pixel = source.GetPixel(i, j);
+                    int r, g, b;
+                    
+                    r = pixel.R;
+                    g = pixel.G;
+                    b = pixel.B;
+                    int k = (int)(0.299 * r + 0.587 * g + 0.114 * b);
+
+                    source.SetPixel(i, j, Color.FromArgb(k, k, k));
+                }
+            }
+
+            return source;
+        }
+
         #endregion
 
         #region Filters
@@ -1186,6 +1239,267 @@ namespace Grafika_Projekt1
             Marshal.Copy(resultBuffer, 0, resultData.Scan0, resultBuffer.Length);
             resultBitmap.UnlockBits(resultData);
             return resultBitmap;
+        }
+
+        public void Sobel_Click(object sender, RoutedEventArgs e)
+        {
+            BitmapCopy();
+            Bitmap temp = SobelFilter(copy);
+            image2.Source = BitmapToImage(temp);
+        }
+
+        private Bitmap SobelFilter(Bitmap bitmap)
+        {
+            Bitmap source = bitmap;
+            Bitmap resultBitmap = bitmap;
+
+            int width = source.Width;
+            int height = source.Height;
+            int[,] gx = new int[,] { { -1, 0, 1 }, { -2, 0, 2 }, { -1, 0, 1 } };
+            int[,] gy = new int[,] { { 1, 2, 1 }, { 0, 0, 0 }, { -1, -2, -1 } };
+
+            int[,] allPixR = new int[width, height];
+            int[,] allPixG = new int[width, height];
+            int[,] allPixB = new int[width, height];
+
+            int limit = 128 * 128;
+
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    allPixR[i, j] = source.GetPixel(i, j).R;
+                    allPixG[i, j] = source.GetPixel(i, j).G;
+                    allPixB[i, j] = source.GetPixel(i, j).B;
+                }
+            }
+
+            int new_rx = 0, new_ry = 0;
+            int new_gx = 0, new_gy = 0;
+            int new_bx = 0, new_by = 0;
+            int rc, gc, bc;
+            for (int i = 1; i < source.Width - 1; i++)
+            {
+                for (int j = 1; j < source.Height - 1; j++)
+                {
+
+                    new_rx = 0;
+                    new_ry = 0;
+                    new_gx = 0;
+                    new_gy = 0;
+                    new_bx = 0;
+                    new_by = 0;
+                    rc = 0;
+                    gc = 0;
+                    bc = 0;
+
+                    for (int wi = -1; wi < 2; wi++)
+                    {
+                        for (int hw = -1; hw < 2; hw++)
+                        {
+                            rc = allPixR[i + hw, j + wi];
+                            new_rx += gx[wi + 1, hw + 1] * rc;
+                            new_ry += gy[wi + 1, hw + 1] * rc;
+
+                            gc = allPixG[i + hw, j + wi];
+                            new_gx += gx[wi + 1, hw + 1] * gc;
+                            new_gy += gy[wi + 1, hw + 1] * gc;
+
+                            bc = allPixB[i + hw, j + wi];
+                            new_bx += gx[wi + 1, hw + 1] * bc;
+                            new_by += gy[wi + 1, hw + 1] * bc;
+                        }
+                    }
+                    if (new_rx * new_rx + new_ry * new_ry > limit || new_gx * new_gx + new_gy * new_gy > limit || new_bx * new_bx + new_by * new_by > limit)
+                        resultBitmap.SetPixel(i, j, Color.White);
+
+                    else
+                        resultBitmap.SetPixel(i, j, Color.Black);
+                }
+            }
+
+            var resultData = resultBitmap.LockBits(new System.Drawing.Rectangle(0, 0,
+                       resultBitmap.Width, resultBitmap.Height),
+                        System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                        System.Drawing.Imaging.PixelFormat.Format32bppRgb);
+
+            return resultBitmap;
+        }
+
+        public void HighPass_Click(object sender, RoutedEventArgs e)
+        {
+            BitmapCopy();
+            int[] sharp =
+                {0, -1, 0,
+                -1, 20, -1,
+                 0, -1, 0};
+            Bitmap temp = HighPassFilter(copy,sharp);
+            temp = HighPassFilter(copy, sharp);
+            image2.Source = BitmapToImage(temp);
+        }
+
+        private Bitmap HighPassFilter(Bitmap bitmap, int[] filter)
+        {
+            red = new int[bitmap.Width + 1, bitmap.Height + 1];
+            green = new int[bitmap.Width + 1, bitmap.Height + 1];
+            blue = new int[bitmap.Width + 1, bitmap.Height + 1];
+            grey = new int[bitmap.Width + 1, bitmap.Height + 1];
+
+            for (int i = 0; i < bitmap.Width; i++)
+            {
+                for (int j = 0; j < bitmap.Height; j++)
+                {
+                    Color pixel = bitmap.GetPixel(i, j);
+                    red[i, j] = pixel.R;
+                    green[i, j] = pixel.G;
+                    blue[i, j] = pixel.B;
+                }
+            }
+
+            int mask = 3;
+
+            int rSum, gSum, bSum, wynik = 0;
+            Bitmap source = bitmap;
+            int margin = ((mask - 1) / 2);
+            for (int i = 0; i < mask; i++)
+            {
+                for (int j = 0; j < mask; j++)
+                {
+                    wynik += filter[i + mask * j];
+                }
+            }
+            if (wynik == 0) wynik = 1;
+
+            for (int i = margin; i < source.Width; i++)
+            {
+                for (int j = margin; j < source.Height; j++)
+                {
+                    rSum = 0; gSum = 0; bSum = 0;
+                    for (int x = 0; x < mask; x++)
+                    {
+                        for (int y = 0; y < mask; y++)
+                        {
+                            rSum += filter[x * mask + y] * red[i + x - margin, j + y - margin];
+                            gSum += filter[x * mask + y] * green[i + x - margin, j + y - margin];
+                            bSum += filter[x * mask + y] * blue[i + x - margin, j + y - margin];
+                        }
+                    }
+                    rSum /= wynik; gSum /= wynik; bSum /= wynik;
+
+                    if (rSum > 255) rSum = 255;
+                    else if (rSum < 0) rSum = 0;
+                    if (gSum > 255) gSum = 255;
+                    else if (gSum < 0) gSum = 0;
+                    if (bSum > 255) bSum = 255;
+                    else if (bSum < 0) bSum = 0;
+
+                    source.SetPixel(i, j, Color.FromArgb(rSum + (gSum << 8) + (bSum << 16)));
+                }
+            }
+
+            bitmap = source;
+            for (var i = 0; i < source.Width; i++)
+            {
+                for (var j = 0; j < source.Height; j++)
+                {
+                    Color pixel = source.GetPixel(i, j);
+                    int r, g, b;
+                    r = pixel.R;
+                    g = pixel.G;
+                    b = pixel.B;
+                    source.SetPixel(i, j, Color.FromArgb(r, g, b));
+                }
+            }
+
+            return source;
+        }
+
+        private void Gaussian_Click(object sender, RoutedEventArgs e)
+        {
+            BitmapCopy();
+            int[] gaussian =
+                {1, 2, 1,
+                 2, 4, 2,
+                 1, 2, 1};
+            Bitmap temp = GaussianFilter(copy, gaussian);
+            temp = GaussianFilter(copy, gaussian);
+            image2.Source = BitmapToImage(temp);
+        }
+
+        private Bitmap GaussianFilter(Bitmap bitmap, int[] filter)
+        {
+            red = new int[bitmap.Width + 1, bitmap.Height + 1];
+            green = new int[bitmap.Width + 1, bitmap.Height + 1];
+            blue = new int[bitmap.Width + 1, bitmap.Height + 1];
+            grey = new int[bitmap.Width + 1, bitmap.Height + 1];
+
+            for (int i = 0; i < bitmap.Width; i++)
+            {
+                for (int j = 0; j < bitmap.Height; j++)
+                {
+                    Color pixel = bitmap.GetPixel(i, j);
+                    red[i, j] = pixel.R;
+                    green[i, j] = pixel.G;
+                    blue[i, j] = pixel.B;
+                }
+            }
+
+            int mask = 3;
+
+            int rSum, gSum, bSum, wynik = 0;
+            Bitmap source = bitmap;
+            int margin = ((mask - 1) / 2);
+            for (int i = 0; i < mask; i++)
+            {
+                for (int j = 0; j < mask; j++)
+                {
+                    wynik += filter[i + mask * j];
+                }
+            }
+            if (wynik == 0) wynik = 1;
+
+            for (int i = margin; i < source.Width; i++)
+            {
+                for (int j = margin; j < source.Height; j++)
+                {
+                    rSum = 0; gSum = 0; bSum = 0;
+                    for (int x = 0; x < mask; x++)
+                    {
+                        for (int y = 0; y < mask; y++)
+                        {
+                            rSum += filter[x * mask + y] * red[i + x - margin, j + y - margin];
+                            gSum += filter[x * mask + y] * green[i + x - margin, j + y - margin];
+                            bSum += filter[x * mask + y] * blue[i + x - margin, j + y - margin];
+                        }
+                    }
+                    rSum /= wynik; gSum /= wynik; bSum /= wynik;
+
+                    if (rSum > 255) rSum = 255;
+                    else if (rSum < 0) rSum = 0;
+                    if (gSum > 255) gSum = 255;
+                    else if (gSum < 0) gSum = 0;
+                    if (bSum > 255) bSum = 255;
+                    else if (bSum < 0) bSum = 0;
+
+                    source.SetPixel(i, j, Color.FromArgb(rSum + (gSum << 8) + (bSum << 16)));
+                }
+            }
+
+            bitmap = source;
+            for (var i = 0; i < source.Width; i++)
+            {
+                for (var j = 0; j < source.Height; j++)
+                {
+                    Color pixel = source.GetPixel(i, j);
+                    int r, g, b;
+                    r = pixel.R;
+                    g = pixel.G;
+                    b = pixel.B;
+                    source.SetPixel(i, j, Color.FromArgb(r, g, b));
+                }
+            }
+
+            return source;
         }
 
         #endregion
