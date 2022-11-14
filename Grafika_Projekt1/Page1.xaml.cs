@@ -1020,6 +1020,13 @@ namespace Grafika_Projekt1
             image2.Source = BitmapToImage(temp);
         }
 
+        private void SkalaSzarosci2_Click(object sender, RoutedEventArgs e)
+        {
+            BitmapCopy();
+            Bitmap temp = SkalaSzarosci2(copy);
+            image2.Source = BitmapToImage(temp);
+        }
+
         public Bitmap SkalaSzarosci(Bitmap bitmap)
         {
             Bitmap source = bitmap;
