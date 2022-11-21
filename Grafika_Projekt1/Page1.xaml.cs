@@ -1511,6 +1511,98 @@ namespace Grafika_Projekt1
 
         #endregion
 
+        #region Histogram
+
+        private void Histogramy_Click(object sender, RoutedEventArgs e)
+        {
+            /*
+            if (image != null)
+            {
+                BitmapCopy();
+                var data = copy.LockBits(
+                new System.Drawing.Rectangle(0, 0, copy.Width, copy.Height),
+                System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                System.Drawing.Imaging.PixelFormat.Format24bppRgb
+            );
+                var copyData = new byte[data.Stride * data.Height];
+
+                Marshal.Copy(data.Scan0, copyData, 0, copyData.Length);
+
+                PointCollection _pointsR = new PointCollection();
+                PointCollection _pointsG = new PointCollection();
+                PointCollection _pointsB = new PointCollection();
+                PointCollection _pointsJ = new PointCollection();
+
+
+
+                AForge.Imaging.ImageStatisticsHSL hslStatistics = new AForge.Imaging.ImageStatisticsHSL(bmpOut);
+                jasnosc = hslStatistics.Luminance.Values;
+                // RGB
+                AForge.Imaging.ImageStatistics rgbStatistics = new AForge.Imaging.ImageStatistics(bmpOut);
+                int[] redValues = rgbStatistics.Red.Values;
+                int[] greenValues = rgbStatistics.Green.Values;
+                int[] blueValues = rgbStatistics.Blue.Values;
+
+                //punkty
+                int maxR = redValues.Max();
+                int maxG = greenValues.Max();
+                int maxB = blueValues.Max();
+                int maxJ = jasnosc.Max();
+
+                // first point (lower-left corner)
+
+                //R
+                _pointsR.Add(new System.Windows.Point(0, maxR));
+                // middle points
+                for (int i = 0; i < redValues.Length; i++)
+                {
+                    _pointsR.Add(new System.Windows.Point(i, maxR - redValues[i]));
+                }
+                // last point (lower-right corner)
+                _pointsR.Add(new System.Windows.Point(redValues.Length - 1, maxR));
+                //G
+                _pointsG.Add(new System.Windows.Point(0, maxG));
+                // middle points
+                for (int i = 0; i < greenValues.Length; i++)
+                {
+                    _pointsG.Add(new System.Windows.Point(i, maxG - greenValues[i]));
+                }
+                // last point (lower-right corner)
+                _pointsG.Add(new System.Windows.Point(greenValues.Length - 1, maxG));
+
+                //B
+                _pointsB.Add(new System.Windows.Point(0, maxB));
+                // middle points
+                for (int i = 0; i < blueValues.Length; i++)
+                {
+                    _pointsB.Add(new System.Windows.Point(i, maxB - blueValues[i]));
+                }
+                // last point (lower-right corner)
+                _pointsB.Add(new System.Windows.Point(blueValues.Length - 1, maxB));
+
+                //J
+                _pointsJ.Add(new System.Windows.Point(0, maxJ));
+                // middle points
+                for (int i = 0; i < jasnosc.Length; i++)
+                {
+                    _pointsJ.Add(new System.Windows.Point(i, maxJ - jasnosc[i]));
+                }
+                // last point (lower-right corner)
+                _pointsJ.Add(new System.Windows.Point(jasnosc.Length - 1, maxJ));
+
+
+                pointsJ = _pointsJ;
+                pointsR = _pointsR;
+                pointsG = _pointsG;
+                pointsB = _pointsB;
+                var window = new Histogram() { Owner = this };
+                window.Show();
+
+            }*/
+
+        }
+
+        #endregion
         public Bitmap ImageToBitmap(BitmapSource bitmapSource)
         {
             if (bitmapSource != null)
@@ -1568,6 +1660,11 @@ namespace Grafika_Projekt1
         private void Button_New_Page(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page2());
+        }
+
+        private void Button_Bezier(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page3());
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
