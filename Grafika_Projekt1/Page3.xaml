@@ -3,9 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+       xmlns:oxy ="http://oxyplot.org/wpf"
         xmlns:local="clr-namespace:Grafika_Projekt1"
         mc:Ignorable="d"
         Title="Page3" Height="616" Width="1281">
+
     <Grid Background="#FFF0F0F0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -74,21 +76,53 @@
                                      HorizontalAlignment="Center" Margin="32.6,12.2,13.2,6.6" Width="31" Height="18" RenderTransformOrigin="0.353,1.812"/>
                         <TextBox Grid.Column="0" Grid.Row="4" x:Name="P3Y" VerticalAlignment="Center" TextAlignment="Center" Text=""
                                      HorizontalAlignment="Center" Margin="91,13.2,0.4,6.4" Width="31" Height="18" RenderTransformOrigin="0.353,1.812"/>
-                        <TextBlock Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" Text="P4:" Margin="122,13.2,28.2,-0.6" Height="25" Width="49" Grid.ColumnSpan="2"/>
-                        <TextBox Grid.Column="1" Grid.Row="4" x:Name="P4" VerticalAlignment="Center" TextAlignment="Center" Text=""
-                                     HorizontalAlignment="Center" Margin="35.6,12.2,10.2,7.4" Width="31" Height="18" RenderTransformOrigin="0.353,1.812"/>
+                        <TextBlock Grid.Row="4" HorizontalAlignment="Center" VerticalAlignment="Center" Text="P4:" Margin="27.6,13.2,0.2,-0.6" Height="25" Width="49" Grid.Column="1"/>
+                        <TextBox Grid.Column="1" Grid.Row="4" x:Name="P4X" VerticalAlignment="Center" TextAlignment="Center" Text=""
+                                     HorizontalAlignment="Center" Margin="61.6,12.2,61,7.4" Width="31" Height="18" RenderTransformOrigin="0.353,1.812" Grid.ColumnSpan="2"/>
+                        <TextBox Grid.Column="2" Grid.Row="4" x:Name="P4Y" VerticalAlignment="Center" TextAlignment="Center" Text=""
+                                     HorizontalAlignment="Center" Margin="20.8,13.2,25,6.4" Width="31" Height="18" RenderTransformOrigin="0.353,1.812"/>
                     </Grid>
                     <Grid>
-                        <Button Grid.Column="0" Grid.Row="0" x:Name="DrawButton" Content="Rysuj" Height="24" Width="76" Click="Draw_Click" Margin="53,0,147,0" />
-                        <Button Grid.Row="0" x:Name="ResizeButton" Content="Edytuj" Height="24" Width="76" Click="Resize_Click" Margin="147,0,53,0" />
+                        <Button Grid.Column="0" Grid.Row="0" x:Name="DrawButton" Content="Rysuj" Height="24" Width="76" Click="Draw_Click" Margin="10,0,190,0" />
+                        <Button Grid.Row="0" x:Name="ResizeButton" Content="Edytuj" Height="24" Width="76" Click="Edit_Click" Margin="91,0,109,0" />
+                        <Button Grid.Row="0" x:Name="Button" Content="Wyczyść" Height="24" Width="76" Click="Clear_Click" Margin="190,0,10,0" />
                     </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="145*"/>
+                            <ColumnDefinition Width="131*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="Punkt:" Margin="38,50,58.168,0.2" Height="25" Width="49" RenderTransformOrigin="-0.631,1.057"/>
+                        <TextBox x:Name="addY" VerticalAlignment="Center" TextAlignment="Center" Text=""
+                                     HorizontalAlignment="Center" Margin="128,50,117,7.2" Width="31" Height="18" RenderTransformOrigin="0.353,1.812" Grid.ColumnSpan="2"/>
+                        <TextBox Grid.Column="0" x:Name="addX" VerticalAlignment="Center" TextAlignment="Center" Text=""
+                                     HorizontalAlignment="Center" Margin="92,50,22.168,7.2" Width="31" Height="18" RenderTransformOrigin="0.353,1.812"/>
+                        <Button Grid.Row="0" x:Name="AddButton" Content="Dodaj punkt" Height="24" Click="AddPoint_Click" Margin="30.2,46,10,5.2" Grid.Column="1"/>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="145*"/>
+                            <ColumnDefinition Width="131*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="pointLabel" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Punkt:" Margin="38,50,58.168,0.2" Height="25" Width="49" RenderTransformOrigin="-0.631,1.057" Visibility="Hidden"/>
+                        <TextBox x:Name="pointY" VerticalAlignment="Center" TextAlignment="Center" Text=""
+                                     HorizontalAlignment="Center" Margin="128,50,117,7.2" Width="31" Height="18" RenderTransformOrigin="0.353,1.812" Visibility="Hidden" Grid.ColumnSpan="2"/>
+                        <TextBox Grid.Column="0" x:Name="pointX" VerticalAlignment="Center" TextAlignment="Center" Text=""
+                                     HorizontalAlignment="Center" Margin="92,50,22.168,7.2" Width="31" Height="18" RenderTransformOrigin="0.353,1.812" Visibility="Hidden"/>
+                        <Button Grid.Row="0" x:Name="EditButton" Content="Zatwierdź" Height="24" Width="76" Click="EditPoint_Click" Margin="44.832,46,10,5.2" Visibility="Hidden" Grid.Column="1"/>
+                    </Grid>
+
                 </StackPanel>
             </Border>
         </Grid>
 
         <Canvas x:Name="canvas" Background="White" Grid.Column="1" Grid.Row="1" MouseLeftButtonDown="MouseDown_Event" MouseMove="MouseMove_Event" MouseLeftButtonUp="MouseUp_Event" Margin="282,0,-0.4,0">
-            <TextBlock Canvas.Left="-235" TextWrapping="Wrap" Text="" Canvas.Top="437" Name="komunikat" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold"/>
+            <TextBlock Canvas.Left="-235" TextWrapping="Wrap" Text="" Canvas.Top="437" Name="komunikat" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Visibility="Visible"/>
         </Canvas>
+
+        <Grid Grid.ColumnSpan="2" Margin="25,398.4,1018.8,112" Grid.Row="1">
+            <oxy:PlotView x:Name="Plot" Background="Lavender" Model="{Binding MyModel}" DataContext="MyModel"/>
+        </Grid>
 
     </Grid>
 </Page>
