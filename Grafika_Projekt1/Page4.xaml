@@ -1,0 +1,99 @@
+﻿<Page x:Class="Grafika_Projekt1.Page4"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Grafika_Projekt1"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Page4">
+
+    <Grid Background="White" x:Name="MainGrid2">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0" Grid.ColumnSpan="3" x:Name="Main_Menu"  
+              VerticalAlignment="Top" HorizontalAlignment="Left"   
+              Width="{Binding ActualWidth, ElementName=MainGrid2}"
+              RenderTransformOrigin="0.5,0.5" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+
+            <!--Plik-->
+            <MenuItem Header="_Plik" VerticalAlignment="Center" >
+                <MenuItem Header="_Wczytaj" Click="Wczytaj_Click" />
+                <MenuItem Header="_Zapisz">
+                    <MenuItem Header="Wysoka jakość" Click="WysokaJakość_Click"/>
+                    <MenuItem Header="Średnia jakość" Click="ŚredniaJakość_Click"/>
+                    <MenuItem Header="Niska jakość" Click="NiskaJakość_Click"/>
+                </MenuItem>
+
+                <Separator/>
+                <MenuItem Header="_Wyjście" Click="Exit_Click" />
+            </MenuItem>
+            <MenuItem Header="_Zadania" VerticalAlignment="Center">
+                <MenuItem Header="_Krzywe Beziera" Click="Button_Bezier"/>
+
+            </MenuItem>
+        </Menu>
+
+
+        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical"
+                    Background="Bisque">
+            <StackPanel.Resources>
+                <Style TargetType="TextBox" x:Key="TextField">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="Grid.Column" Value="1"/>
+                </Style>
+            </StackPanel.Resources>
+
+            <GroupBox Header="Normalizacja" FontSize="15">
+                <StackPanel Orientation="Vertical">
+                    <RadioButton Content="Rozszerzenie histogramu" GroupName="Norm"
+            x:Name="StretchingRadioButton"/>
+                    <RadioButton Content="Wyrównanie histogramu" GroupName="Norm"
+            x:Name="EqualizationRadioButton"/>
+                </StackPanel>
+            </GroupBox>
+            <Button Content="Wykonaj" Click="PerformNormalization_Click" HorizontalAlignment="Center" Width="70" FontSize="15"/>
+            <Separator/>
+
+            <GroupBox Header="Binaryzacja" FontSize="15">
+                <StackPanel Orientation="Vertical">
+                    <RadioButton Content="Ręcznie przez użytkownika" GroupName="Bin"
+            x:Name="ManualRadioButton" Checked="Bin_Checked"/>
+                    <RadioButton Content="Procentowa selekcja czarnego" GroupName="Bin"
+            x:Name="PercentBlackSelectionRadioButton" Checked="Bin_Checked"/>
+                    <RadioButton Content="Selekcja iteratywna średniej" GroupName="Bin"
+            x:Name="MeanIterativeSelectionRadioButton" Checked="Bin_Checked"/>
+                    <RadioButton Content="Selekcja entropii" GroupName="Bin"
+            x:Name="EntropySelectionRadioButton" Checked="Bin_Checked"/>
+                    <RadioButton Content="Błąd minimalny" GroupName="Bin"
+            x:Name="MinimumErrorRadioButton" Checked="Bin_Checked"/>
+                    <RadioButton Content="Rozmyty błąd minimalny" GroupName="Bin"
+            x:Name="FuzzyMinimumErrorRadioButton" Checked="Bin_Checked"/>
+                </StackPanel>
+            </GroupBox>
+            <Separator/>
+            <Label x:Name="ThresholdLabel" Content="Podaj próg:" HorizontalAlignment="Center" FontSize="15"/>
+            <TextBox Grid.Row="0" x:Name="ThresholdTextBox" HorizontalAlignment="Center" Width="60"/>
+            <StackPanel>
+                <DockPanel HorizontalAlignment="Center" Margin="0,6,0,0">
+                    <Button Content="Akceptuj" Background="#FF66EA66" Click="PerformBinarization_Click" Width="70" Margin="0,0,10,0" FontSize="15"/>
+                    <Button Content="Wyczyść" Click="LoadLast_Click" Background="#FFEA6666" Width="70" FontSize="15"/>
+                </DockPanel>
+            </StackPanel>
+
+        </StackPanel>
+
+        <Border Grid.Column="1" Grid.Row="1" x:Name="Border" BorderThickness="1" BorderBrush="Black"
+      ClipToBounds="True">
+            <Image x:Name="Image" MaxHeight="420" MaxWidth="670"
+        RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+        </Border>
+    </Grid>
+</Page>

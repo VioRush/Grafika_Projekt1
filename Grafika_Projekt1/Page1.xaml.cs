@@ -1662,6 +1662,11 @@ namespace Grafika_Projekt1
             NavigationService.Navigate(new Page2());
         }
 
+        private void Button_New_Page_4(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page4());
+        }
+
         private void Button_Bezier(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page3());
