@@ -36,7 +36,8 @@
             </MenuItem>
             <MenuItem Header="_Zadania" VerticalAlignment="Center">
                 <MenuItem Header="_RGB oraz CMYK" Click="Button_New_Page"/>
-                <MenuItem Header="Krzywe Beziera" Click="Button_Bezier"/>
+                <MenuItem Header="_Histogram i Binaryzacja" Click="Button_New_Page_4"/>
+                <MenuItem Header="_Krzywe Beziera" Click="Button_Bezier"/>
             </MenuItem>
         </Menu>
 
