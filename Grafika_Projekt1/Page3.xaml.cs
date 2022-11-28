@@ -264,16 +264,36 @@ namespace Grafika_Projekt1
                 }
             }
 
-            if (degree > startPoints.Count())
+            if (SelectedFigure == "Polygon")
             {
-                Random rnd = new Random();
-                for (int i = startPoints.Count(); i <= degree; i++)
+                if (degree > startPoints.Count())
                 {
-                    startPoints.Add(new Point(rnd.Next(0, 900), rnd.Next(0, 600)));
+                    Random rnd = new Random();
+                    for (int i = startPoints.Count(); i < degree; i++)
+                    {
+                        startPoints.Add(new Point(rnd.Next(0, 900), rnd.Next(0, 600)));
+                    }
                 }
+                polygonPoints.Clear();
+                foreach(Point p in startPoints)
+                {
+                    polygonPoints.Add(p);   
+                }
+                DrawPolygon();
             }
 
-            UpdateCurve();
+            else if(SelectedFigure == "Curve")
+            {
+                if (degree > startPoints.Count())
+                {
+                    Random rnd = new Random();
+                    for (int i = startPoints.Count(); i <= degree; i++)
+                    {
+                        startPoints.Add(new Point(rnd.Next(0, 900), rnd.Next(0, 600)));
+                    }
+                }
+                UpdateCurve();
+            }
         }
 
         private void Edit_Click(object sender, RoutedEventArgs e)
