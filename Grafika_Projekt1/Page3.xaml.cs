@@ -24,9 +24,9 @@ namespace Grafika_Projekt1
         List<Point> startPoints = new List<Point>();//PointCollection startPoints = new PointCollection();
         List<Point> points = new List<Point>(); // PointCollection points = new PointCollection();
         List<Point> polygonPoints = new List<Point>();
-        double pX, pY, p1X, p1Y, p2X, p2Y, p3X, p3Y, p4X, p4Y, t;
+        double pX, pY, p1X, p1Y, p2X, p2Y, p3X, p3Y, p4X, p4Y, t, xf, yf;
         int degree;
-        bool Dragging = false;
+        bool Dragging = false, Resizing = false;
         string SelectedFigure;
 
         public Page3()
@@ -120,6 +120,23 @@ namespace Grafika_Projekt1
                 //canvas.Children.Clear();
 
             }
+            else if (Resize.IsChecked == true)
+            {
+                xf = e.GetPosition(canvas).X;
+                yf = e.GetPosition(canvas).Y;
+                pointLabel.Visibility = Visibility.Visible;
+                pointX.Visibility = Visibility.Visible;
+                pointX.Text = xf.ToString();
+                pointY.Visibility = Visibility.Visible;
+                pointY.Text =yf.ToString();
+                EditButton.Visibility = Visibility.Hidden;
+                AddButton.Visibility = Visibility.Hidden;
+                ScaleButton.Visibility = Visibility.Visible;
+                sLabel.Visibility = Visibility.Visible;
+                s.Visibility = Visibility.Visible;
+
+
+            }
         }
 
         private void DrawPolygon()
@@ -163,8 +180,53 @@ namespace Grafika_Projekt1
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 figure = sender as FrameworkElement;
-                if (Edit.IsChecked == true)
+                if (figure.GetType().Equals(typeof(Polygon)))
                 {
+                    pX = e.GetPosition(sender as FrameworkElement).X;
+                    pY = e.GetPosition(sender as FrameworkElement).Y;
+                    if (Drag.IsChecked == true)
+                    {
+                        Dragging = true;
+                    }
+                    else if (Resize.IsChecked == true)
+                    {
+                        Resizing = true;
+                        SelectedFigure = "Polygon";
+                        Polygon polygon = (Polygon)figure;
+                        //RectangleVisibility();
+                        if (polygon.Points.Count() >= 4)
+                        {
+                            P1X.Text = polygon.Points[0].X.ToString();
+                            P1Y.Text = polygon.Points[0].Y.ToString();
+                            P2X.Text = polygon.Points[1].X.ToString();
+                            P2Y.Text = polygon.Points[1].Y.ToString();
+                            P3X.Text = polygon.Points[2].X.ToString();
+                            P3Y.Text = polygon.Points[2].Y.ToString();
+                            P4X.Text = polygon.Points[3].X.ToString();
+                            P4Y.Text = polygon.Points[3].Y.ToString();
+                        }
+                        else if(polygon.Points.Count() == 3)
+                        {
+                            P1X.Text = polygon.Points[0].X.ToString();
+                            P1Y.Text = polygon.Points[0].Y.ToString();
+                            P2X.Text = polygon.Points[1].X.ToString();
+                            P2Y.Text = polygon.Points[1].Y.ToString();
+                            P3X.Text = polygon.Points[2].X.ToString();
+                            P3Y.Text = polygon.Points[2].Y.ToString();
+                        }
+                        else if (polygon.Points.Count() == 2)
+                        {
+                            P1X.Text = polygon.Points[0].X.ToString();
+                            P1Y.Text = polygon.Points[0].Y.ToString();
+                            P2X.Text = polygon.Points[1].X.ToString();
+                            P2Y.Text = polygon.Points[1].Y.ToString();
+                        }
+
+                    }
+                }
+                else if (Edit.IsChecked == true)
+                {
+                    SelectedFigure = "Curve";
                     Dragging = true;
                     pX = e.GetPosition(canvas).X;
                     pY = e.GetPosition(canvas).Y;
@@ -190,28 +252,55 @@ namespace Grafika_Projekt1
 
         private void MouseMove_Event(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed && Dragging)
+            if (e.LeftButton == MouseButtonState.Pressed && (Dragging || Resizing))
             {
-                double pX0 = e.GetPosition(canvas).X;
-                double pY0 = e.GetPosition(canvas).Y;
+                double pX0 = e.GetPosition(figure).X;
+                double pY0 = e.GetPosition(figure).Y;
 
-                Point[] tmp = startPoints.ToArray();
-                startPoints.Clear();
-                for (int i = 0; i < tmp.Length; i++)
+                if (SelectedFigure == "Curve")
                 {
-                    if ((tmp[i].X >= pX - 4 && tmp[i].X <= pX + 4) && (tmp[i].Y >= pY - 4 && tmp[i].Y <= pY + 4))
+                    pX0 = e.GetPosition(canvas).X;
+                    pY0 = e.GetPosition(canvas).Y;
+
+                    Point[] tmp = startPoints.ToArray();
+                    startPoints.Clear();
+                    for (int i = 0; i < tmp.Length; i++)
                     {
-                        tmp[i].X = pX0;
-                        tmp[i].Y = pY0;
+                        if ((tmp[i].X >= pX - 4 && tmp[i].X <= pX + 4) && (tmp[i].Y >= pY - 4 && tmp[i].Y <= pY + 4))
+                        {
+                            tmp[i].X = pX0;
+                            tmp[i].Y = pY0;
+                        }
+                        startPoints.Add(new Point(tmp[i].X, tmp[i].Y));
                     }
-                    startPoints.Add(new Point(tmp[i].X, tmp[i].Y));
+
+
+                    pX = pX0;
+                    pY = pY0;
+                    UpdateCurve();
                 }
 
+                else if (SelectedFigure == "Polygon")
+                {
+                    Polygon polygon = (Polygon)figure;
+                    if (Resizing)
+                    {
+                        var points = polygon.Points.ToArray();
+                        for(int i=0; i< points.Length; i++)
+                        {
+                            //Console.WriteLine("zmieniono");
+                            Point p = new Point(points[i].X + (pX0 - pX), points[i].Y + (pY0-pY));
+                            //points[i].X = pX0;
+                            //points[i].Y = pY0;
+                            polygon.Points[i]=p;
+                        }
+                    }
+                }
 
                 pX = pX0;
                 pY = pY0;
-                UpdateCurve();
             }
+
         }
 
         private void UpdateCurve()
@@ -227,6 +316,23 @@ namespace Grafika_Projekt1
                 DrawLine(curve[i], curve[i + 1]);
             }
         }
+
+        private void Scale_Click(object sender, RoutedEventArgs e)
+        {
+            var scale = Double.Parse(s.Text);
+
+            Polygon polygon = (Polygon)figure;
+            var points = polygon.Points.ToArray();
+            for (int i = 0; i < points.Length; i++)
+            {
+                var x_new = xf + (points[i].X - xf) * scale;
+                var y_new = yf + (points[i].Y - yf) * scale;
+                Point p = new Point(x_new, y_new);
+               polygon.Points[i] = p;
+                
+            }
+        }
+
         private void MouseUp_Event(object sender, MouseButtonEventArgs e)
         {
             Dragging = false;
