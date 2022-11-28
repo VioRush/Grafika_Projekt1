@@ -135,6 +135,7 @@ namespace Grafika_Projekt1
                 //canvas.Children.Remove();
             }
             polygon.Points = points;
+            polygon.MouseLeftButtonDown += ChildMouseDown_Event;
             canvas.Children.Add(polygon);
         }
 
