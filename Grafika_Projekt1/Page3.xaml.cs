@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
@@ -19,7 +22,7 @@ namespace Grafika_Projekt1
     /// </summary>
     public partial class Page3 : Page
     {
-        Path bezierCurve;
+        System.Windows.Shapes.Path bezierCurve;
         Geometry curve;
         List<Point> startPoints = new List<Point>();//PointCollection startPoints = new PointCollection();
         List<Point> points = new List<Point>(); // PointCollection points = new PointCollection();
@@ -33,6 +36,72 @@ namespace Grafika_Projekt1
         {
             InitializeComponent();
         }
+
+        #region Plik
+        private void Wczytaj_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "Wybierz obraz";
+            openFileDialog.Filter = "BMP|*.bmp|GIF|*.gif|JPEG|*.jpg;*.jpeg|PPM|*.ppm|PNG|*.png|TIFF|*.tif;*.tiff|"
+       + "All Graphics Types|*.txt";
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string filePath = System.IO.Path.GetExtension(openFileDialog.FileName);
+
+            }
+            FileStream fileStream = new FileStream(openFileDialog.FileName, FileMode.Open);
+            Canvas savedCanvas = XamlReader.Load(fileStream) as Canvas;
+            fileStream.Close();
+            for(int i=0; i<savedCanvas.Children.Count; i++)
+            {
+                if(savedCanvas.Children[i].GetType().Equals(typeof(Polygon)))
+                {
+                    Polygon polygon = (Polygon)savedCanvas.Children[i];
+                    polygonPoints.Clear();
+                    foreach(Point p in polygon.Points)
+                    {
+                        polygonPoints.Add(p);
+                    }
+                    DrawPolygon();
+                    //canvas.Children.Add();
+
+                }
+                Console.WriteLine(savedCanvas.Children[i]);
+
+            }
+            
+        }
+
+
+        private void Zapisz_Click(object sender, RoutedEventArgs e)
+        {
+            if (canvas.Children.Count <= 0)
+            {
+                System.Windows.MessageBox.Show("Aby zapisać, dodaj chociażby jedną figurę.", "Brak figur!");
+
+            }
+            else
+            {
+                Microsoft.Win32.SaveFileDialog save = new Microsoft.Win32.SaveFileDialog();
+                save.Title = "Zapisywanie jako";
+                save.Filter = "Tekstowy|*.txt";
+                save.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+                //JpegBitmapEncoder encoder;
+
+                if (save.ShowDialog() == true)
+                {
+                    string ext = System.IO.Path.GetExtension(save.FileName);
+                    FileStream filestream = new FileStream(save.FileName, FileMode.Create);
+
+                    XamlWriter.Save(canvas, filestream);
+                    filestream.Close();
+                }
+            }
+        }
+
+        #endregion
 
         private void Krzywa_Click(object sender, RoutedEventArgs e)
         {
@@ -282,25 +351,106 @@ namespace Grafika_Projekt1
 
                 else if (SelectedFigure == "Polygon")
                 {
+                    /*
                     Polygon polygon = (Polygon)figure;
+                    var points = polygon.Points.ToArray();
                     if (Resizing)
                     {
+                        for (int i = 0; i < points.Length; i++)
+                        {
+                            if (points[i].X != pX)
+                            {
+                                Point p = new Point(points[i].X+((pX0-xf)/(pX-xf)), points[i].Y + ((pY0 - yf) / (pY - yf)));
+                                Console.WriteLine("p: " + p.X + ", " + p.Y);
+                                //points[i].X = pX0;
+                                //points[i].Y = pY0;
+                                polygon.Points[i] = p;
+                            }
+                            else
+                            {
+                                Point p = new Point(pX0, pY0);
+                                //points[i].X = pX0;
+                                //points[i].Y = pY0;
+                                polygon.Points[i] = p;
+                            }
+                        }
+                        /*
+                        double scaleX = 0, scaleY = 0;
+                        int idx = 0;
                         var points = polygon.Points.ToArray();
+                        
                         for(int i=0; i< points.Length; i++)
                         {
-                            //Console.WriteLine("zmieniono");
-                            Point p = new Point(points[i].X + (pX0 - pX), points[i].Y + (pY0-pY));
-                            //points[i].X = pX0;
-                            //points[i].Y = pY0;
-                            polygon.Points[i]=p;
+                            if(points[i].X == pX)
+                            {
+                                scaleX = (pX0 - xf) / (points[i].X - xf);
+                                scaleY = (pY0 - xf) / (points[i].Y - yf);
+                                Console.WriteLine("scale: " + scaleX + ", " + scaleY);
+                                idx = i;
+                            }
                         }
-                    }
+                        for (int i = 0; i < points.Length; i++)
+                        {
+                            if (points[i].X != pX)
+                            {
+                                var x_new = xf + (points[i].X - xf) * scaleX;
+                                var y_new = yf + (points[i].Y - yf) * scaleY;
+                                Point p = new Point(x_new, y_new);
+                                //points[i].X = pX0;
+                                //points[i].Y = pY0;
+                                polygon.Points[i] = p;
+                            }
+                            else
+                            {
+                                Point p = new Point(pX0, pY0);
+                                //points[i].X = pX0;
+                                //points[i].Y = pY0;
+                                polygon.Points[i] = p;
+                            }
+                        }
+                    
+                    }*/
                 }
 
-                pX = pX0;
-                pY = pY0;
+                //pX = pX0;
+                //pY = pY0;
             }
 
+        }
+
+        private void MouseUp_Event(object sender, MouseButtonEventArgs e)
+        {
+            Dragging = false;
+            double pX0 = e.GetPosition(figure).X;
+            double pY0 = e.GetPosition(figure).Y;
+            if (SelectedFigure == "Polygon" && Resizing)
+            {
+                Console.WriteLine("Start point xf, yf(start (figura)): " + xf + " " + yf);
+                Console.WriteLine("Wartości px, py(start (figura)): " + pX + " " + pY);
+                Console.WriteLine("Wartości px0, py0(koniec (figura)): " + pX0 + " " + pY0);
+                Console.WriteLine("scale: " + ((pX0 - xf) / (pX - xf)));
+                Polygon polygon = (Polygon)figure;
+                var points = polygon.Points.ToArray();
+                for (int i = 0; i < points.Length; i++)
+                {
+                    if (points[i].X != pX)
+                    {
+                        var x_new = xf + (points[i].X - xf) * ((pX0 - xf) / (pX - xf));
+                        var y_new = yf + (points[i].Y - yf) * ((pX0 - xf) / (pX - xf));
+                        Point p = new Point(x_new, y_new);
+                        //points[i].X = pX0;
+                        //points[i].Y = pY0;
+                        polygon.Points[i] = p;
+                    }
+                    else
+                    {
+                        Point p = new Point(pX0, pY0);
+                        //points[i].X = pX0;
+                        //points[i].Y = pY0;
+                        polygon.Points[i] = p;
+                    }
+                }
+            }
         }
 
         private void UpdateCurve()
@@ -331,11 +481,6 @@ namespace Grafika_Projekt1
                polygon.Points[i] = p;
                 
             }
-        }
-
-        private void MouseUp_Event(object sender, MouseButtonEventArgs e)
-        {
-            Dragging = false;
         }
 
         private void Draw_Click(object sender, RoutedEventArgs e)
@@ -553,6 +698,11 @@ namespace Grafika_Projekt1
         private void Button_New_Page(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page2());
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Application.Current.Shutdown();
         }
     }
 }
