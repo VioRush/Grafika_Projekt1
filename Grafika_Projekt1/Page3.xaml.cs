@@ -189,10 +189,11 @@ namespace Grafika_Projekt1
                 //canvas.Children.Clear();
 
             }
-            else if (Resize.IsChecked == true)
+            else if (Resize.IsChecked == true && !sender.GetType().Equals(typeof(Polygon)))
             {
-                xf = e.GetPosition(canvas).X;
-                yf = e.GetPosition(canvas).Y;
+               // xf = e.GetPosition(canvas).X;
+               // yf = e.GetPosition(canvas).Y;
+               /* Console.WriteLine("xf,yf: " + xf + ", " + yf);
                 pointLabel.Visibility = Visibility.Visible;
                 pointX.Visibility = Visibility.Visible;
                 pointX.Text = xf.ToString();
@@ -203,7 +204,7 @@ namespace Grafika_Projekt1
                 ScaleButton.Visibility = Visibility.Visible;
                 sLabel.Visibility = Visibility.Visible;
                 s.Visibility = Visibility.Visible;
-
+               */
 
             }
         }
@@ -251,8 +252,10 @@ namespace Grafika_Projekt1
                 figure = sender as FrameworkElement;
                 if (figure.GetType().Equals(typeof(Polygon)))
                 {
-                    pX = e.GetPosition(sender as FrameworkElement).X;
-                    pY = e.GetPosition(sender as FrameworkElement).Y;
+                    //pX = e.GetPosition(sender as FrameworkElement).X;
+                    //pY = e.GetPosition(sender as FrameworkElement).Y;
+                    pX = e.GetPosition(canvas).X;
+                    pY = e.GetPosition(canvas).Y;
                     if (Drag.IsChecked == true)
                     {
                         Dragging = true;
@@ -421,22 +424,32 @@ namespace Grafika_Projekt1
         private void MouseUp_Event(object sender, MouseButtonEventArgs e)
         {
             Dragging = false;
-            double pX0 = e.GetPosition(figure).X;
-            double pY0 = e.GetPosition(figure).Y;
+            double pX0 = e.GetPosition(canvas).X;
+            double pY0 = e.GetPosition(canvas).Y;
             if (SelectedFigure == "Polygon" && Resizing)
             {
                 Console.WriteLine("Start point xf, yf(start (figura)): " + xf + " " + yf);
                 Console.WriteLine("Wartości px, py(start (figura)): " + pX + " " + pY);
                 Console.WriteLine("Wartości px0, py0(koniec (figura)): " + pX0 + " " + pY0);
-                Console.WriteLine("scale: " + ((pX0 - xf) / (pX - xf)));
+                Console.WriteLine("px0-xf: " + (pX0 - xf));
+                Console.WriteLine("px-xf: " + (pX - xf));
+                double scale = Math.Sqrt((pX0 - xf) / (pX - xf));
+                Console.WriteLine("sc: " + scale);
+                if (scale == '?')
+                {
+                    scale = 1;
+
+                }
+                Console.WriteLine("scale: " + scale);
                 Polygon polygon = (Polygon)figure;
                 var points = polygon.Points.ToArray();
                 for (int i = 0; i < points.Length; i++)
                 {
                     if (points[i].X != pX)
                     {
-                        var x_new = xf + (points[i].X - xf) * ((pX0 - xf) / (pX - xf));
-                        var y_new = yf + (points[i].Y - yf) * ((pX0 - xf) / (pX - xf));
+                        var x_new = xf + (points[i].X - xf) * Math.Max((pX0 - xf) / (pX - xf), 0.2);
+                        var y_new = yf + (points[i].Y - yf) * Math.Max((pX0 - xf) / (pX - xf), 0.2);
+                        Console.WriteLine("Wartości new): " + x_new + " " + y_new);
                         Point p = new Point(x_new, y_new);
                         //points[i].X = pX0;
                         //points[i].Y = pY0;
@@ -481,6 +494,23 @@ namespace Grafika_Projekt1
                polygon.Points[i] = p;
                 
             }
+        }
+
+        private void ScalePoint_Click(object sender, MouseButtonEventArgs e)
+        {
+            xf = e.GetPosition(canvas).X;
+            yf = e.GetPosition(canvas).Y;
+            Console.WriteLine("xf,yf: " + xf + ", " + yf);
+            pointLabel.Visibility = Visibility.Visible;
+            pointX.Visibility = Visibility.Visible;
+            pointX.Text = xf.ToString();
+            pointY.Visibility = Visibility.Visible;
+            pointY.Text =yf.ToString();
+            EditButton.Visibility = Visibility.Hidden;
+            AddButton.Visibility = Visibility.Hidden;
+            ScaleButton.Visibility = Visibility.Visible;
+            sLabel.Visibility = Visibility.Visible;
+            s.Visibility = Visibility.Visible;
         }
 
         private void Draw_Click(object sender, RoutedEventArgs e)

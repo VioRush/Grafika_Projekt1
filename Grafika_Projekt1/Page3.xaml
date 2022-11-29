@@ -133,7 +133,7 @@
             </Border>
         </Grid>
 
-        <Canvas x:Name="canvas" Background="White" Grid.Column="1" Grid.Row="1" MouseLeftButtonDown="MouseDown_Event" MouseMove="MouseMove_Event" MouseLeftButtonUp="MouseUp_Event" Margin="282,0,-0.4,0">
+        <Canvas x:Name="canvas" Background="White" Grid.Column="1" Grid.Row="1" MouseLeftButtonDown="MouseDown_Event" MouseMove="MouseMove_Event" MouseLeftButtonUp="MouseUp_Event" MouseRightButtonDown="ScalePoint_Click" Margin="282,0,-0.4,0">
             <TextBlock Canvas.Left="-235" TextWrapping="Wrap" Text="" Canvas.Top="437" Name="komunikat" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold"/>
         </Canvas>
 
