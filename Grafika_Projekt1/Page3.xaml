@@ -68,7 +68,7 @@
                             <RadioButton x:Name="Rotation" Content="Obrót" Margin="177,10,38,13"  />
                         </Grid>
                         <Button x:Name="Krzywa" Grid.Column="0" Grid.Row="1" Content="Linia" Click="Krzywa_Click" Margin="7,2,35.4,1" Height="25" Width="80"/>
-                        <Button x:Name="Wielokąt" Grid.Row="1" Content="Wielookąt" Click="Wielokat_Click" Margin="92,2,27.2,1" Height="25" Width="80" Grid.ColumnSpan="2"/>
+                        <Button x:Name="Wielokąt" Grid.Row="1" Content="Wielokąt" Click="Wielokat_Click" Margin="92,2,27.2,1" Height="25" Width="80" Grid.ColumnSpan="2"/>
                         <Button x:Name="Okręg" Grid.Column="1" Grid.Row="1" Content="Okręg" Click="Circle_Click" Margin="54.6,2,19,1" Height="25" Width="80" Grid.ColumnSpan="2"/>
                         <TextBlock x:Name="StopieńKrzywej" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Stopień krzywej:" Margin="16,12.4,22.4,9.2" Height="16" Width="84"/>
                         <TextBlock x:Name="Kąty" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Ilość kątów:" Margin="16,12.4,22.4,9.2" Height="16" Width="84" Visibility="Hidden"/>
@@ -102,7 +102,6 @@
                         <Button Grid.Column="0" Grid.Row="0" x:Name="DrawButton" Content="Rysuj" Height="24" Width="76" Click="Draw_Click" Margin="10,4,190,44" />
                         <Button Grid.Row="0" x:Name="ResizeButton" Content="Edytuj" Height="24" Width="76" Click="Edit_Click" Margin="91,4,109,44" />
                         <Button Grid.Row="0" x:Name="Button" Content="Wyczyść" Height="24" Width="76" Click="Clear_Click" Margin="190,4,10,44" />
-                        <Button Grid.Row="0" x:Name="Button_Copy" Content="nie uspewaju" Height="24" Width="76" Click="Button_Click_Edit" Margin="49,34,151,14" />
 
                     </Grid>
                     <Grid>
@@ -120,6 +119,7 @@
                         <TextBox x:Name="s" VerticalAlignment="Center" TextAlignment="Center" Text=""
                                      HorizontalAlignment="Center" Margin="2.2,80,98,-22.8" Width="31" Height="18" RenderTransformOrigin="0.353,1.812" Grid.Column="1"  Visibility="Hidden"/>
                         <Button Grid.Row="0" x:Name="ScaleButton" Content="Skaluj" Height="24" Click="Scale_Click" Margin="38.2,76,2,-24.8" Grid.Column="1"  Visibility="Hidden"/>
+                        <Button Grid.Row="0" x:Name="Button_Copy" Content="Przesuń" Height="24" Width="76" Click="Button_Click_Edit" Margin="38.2,17,17,34.2" Grid.Column="1" />
                     </Grid>
                     <Grid>
                         <Grid.ColumnDefinitions>

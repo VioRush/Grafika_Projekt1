@@ -501,14 +501,10 @@ namespace Grafika_Projekt1
         }
         private void Button_Click_Edit(object sender, RoutedEventArgs e)
         {
-            p1X = Int32.Parse(P1X.Text);
-            p1Y = Int32.Parse(P1Y.Text);
-            p2X = Int32.Parse(P2X.Text);
-            p2Y = Int32.Parse(P2Y.Text);
-            p3X = Int32.Parse(P3X.Text);
-            p3Y = Int32.Parse(P3Y.Text);
-            p4X = Int32.Parse(P4X.Text);
-            p4Y = Int32.Parse(P4Y.Text);
+            Dragging = true;
+
+            pX = double.Parse(addX.Text);
+            pY = double.Parse(addY.Text);
 
             Polygon polygon = (Polygon)figure;
             if (Dragging)
@@ -516,11 +512,12 @@ namespace Grafika_Projekt1
                 var points = polygon.Points.ToArray();
                 for (int i = 0; i < points.Length; i++)
                 {
-                    Point p = new Point(points[i].X + (p1X - pX), points[i].Y + (p1Y - pY));
+                    Point p = new Point(points[i].X + pX, points[i].Y + pY);
 
                     polygon.Points[i] = p;
                 }
             }
+            Dragging = false;
         }
 
         private void MouseUp_Event(object sender, MouseButtonEventArgs e)
@@ -603,19 +600,27 @@ namespace Grafika_Projekt1
 
         private void ScalePoint_Click(object sender, MouseButtonEventArgs e)
         {
-            xf = e.GetPosition(canvas).X;
-            yf = e.GetPosition(canvas).Y;
-            Console.WriteLine("xf,yf: " + xf + ", " + yf);
-            pointLabel.Visibility = Visibility.Visible;
-            pointX.Visibility = Visibility.Visible;
-            pointX.Text = xf.ToString();
-            pointY.Visibility = Visibility.Visible;
-            pointY.Text =yf.ToString();
-            EditButton.Visibility = Visibility.Hidden;
-            AddButton.Visibility = Visibility.Hidden;
-            ScaleButton.Visibility = Visibility.Visible;
-            sLabel.Visibility = Visibility.Visible;
-            s.Visibility = Visibility.Visible;
+            if (Resize.IsChecked == true)
+            {
+                xf = e.GetPosition(canvas).X;
+                yf = e.GetPosition(canvas).Y;
+                Console.WriteLine("xf,yf: " + xf + ", " + yf);
+                pointLabel.Visibility = Visibility.Visible;
+                pointX.Visibility = Visibility.Visible;
+                pointX.Text = xf.ToString();
+                pointY.Visibility = Visibility.Visible;
+                pointY.Text = yf.ToString();
+                EditButton.Visibility = Visibility.Hidden;
+                AddButton.Visibility = Visibility.Hidden;
+                ScaleButton.Visibility = Visibility.Visible;
+                sLabel.Visibility = Visibility.Visible;
+                s.Visibility = Visibility.Visible;
+            }
+            else if (Rotation.IsChecked == true)
+            {
+                p1X = e.GetPosition(canvas).X;
+                p1Y = e.GetPosition(canvas).Y;
+            }
         }
 
         private void Draw_Click(object sender, RoutedEventArgs e)
