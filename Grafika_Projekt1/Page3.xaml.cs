@@ -399,6 +399,20 @@ namespace Grafika_Projekt1
                             }
                         }
                     }
+                    if (Dragging && Drag.IsChecked == true)
+                    {
+                        Polygon polygon = (Polygon)figure;
+                        if (Dragging)
+                        {
+                            var points = polygon.Points.ToArray();
+                            for (int i = 0; i < points.Length; i++)
+                            {
+                                Point p = new Point(points[i].X + (pX0 - pX), points[i].Y + (pY0 - pY));
+
+                                polygon.Points[i] = p;
+                            }
+                        }
+                    }
                     if (Rotating && Rotation.IsChecked == true)
                     {
                         pX0 = e.GetPosition(canvas).X;
@@ -432,7 +446,81 @@ namespace Grafika_Projekt1
                 pX = pX0;
                 pY = pY0;
             }
+        }
+        private void Rotation_Click(object sender, RoutedEventArgs e)
+        {
+            int alfa = Int32.Parse(Stopień.Text);
 
+            Polygon polygon = (Polygon)figure;
+            var points = polygon.Points.ToArray();
+
+            for (int i = 0; i < points.Length; i++)
+            {
+                if (points[i].X != pX)
+                {
+                    var x_new = p1X + ((points[i].X - p1X) * Math.Cos((Math.PI / 180) * alfa)) - ((points[i].Y - p1Y) * Math.Sin((Math.PI / 180) * alfa));
+                    var y_new = p1Y + ((points[i].X - p1X) * Math.Sin((Math.PI / 180) * alfa)) + ((points[i].Y - p1Y) * Math.Cos((Math.PI / 180) * alfa));
+
+                    Point p = new Point(x_new, y_new);
+                    polygon.Points[i] = p;
+                }
+                else
+                {
+                    Point p = new Point(p1X, p1Y);
+                    //points[i].X = pX0;
+                    //points[i].Y = pY0;
+                    polygon.Points[i] = p;
+                }
+            }
+        }
+        private void Rotation_Click_Minus(object sender, RoutedEventArgs e)
+        {
+            int alfa = Int32.Parse(Stopień.Text) - (Int32.Parse(Stopień.Text) * 2);
+
+            Polygon polygon = (Polygon)figure;
+            var points = polygon.Points.ToArray();
+
+            for (int i = 0; i < points.Length; i++)
+            {
+                if (points[i].X != pX)
+                {
+                    var x_new = p1X + ((points[i].X - p1X) * Math.Cos((Math.PI / 180) * alfa)) - ((points[i].Y - p1Y) * Math.Sin((Math.PI / 180) * alfa));
+                    var y_new = p1Y + ((points[i].X - p1X) * Math.Sin((Math.PI / 180) * alfa)) + ((points[i].Y - p1Y) * Math.Cos((Math.PI / 180) * alfa));
+
+                    Point p = new Point(x_new, y_new);
+                    polygon.Points[i] = p;
+                }
+                else
+                {
+                    Point p = new Point(p1X, p1Y);
+                    //points[i].X = pX0;
+                    //points[i].Y = pY0;
+                    polygon.Points[i] = p;
+                }
+            }
+        }
+        private void Button_Click_Edit(object sender, RoutedEventArgs e)
+        {
+            p1X = Int32.Parse(P1X.Text);
+            p1Y = Int32.Parse(P1Y.Text);
+            p2X = Int32.Parse(P2X.Text);
+            p2Y = Int32.Parse(P2Y.Text);
+            p3X = Int32.Parse(P3X.Text);
+            p3Y = Int32.Parse(P3Y.Text);
+            p4X = Int32.Parse(P4X.Text);
+            p4Y = Int32.Parse(P4Y.Text);
+
+            Polygon polygon = (Polygon)figure;
+            if (Dragging)
+            {
+                var points = polygon.Points.ToArray();
+                for (int i = 0; i < points.Length; i++)
+                {
+                    Point p = new Point(points[i].X + (p1X - pX), points[i].Y + (p1Y - pY));
+
+                    polygon.Points[i] = p;
+                }
+            }
         }
 
         private void MouseUp_Event(object sender, MouseButtonEventArgs e)
@@ -510,6 +598,8 @@ namespace Grafika_Projekt1
                 
             }
         }
+
+
 
         private void ScalePoint_Click(object sender, MouseButtonEventArgs e)
         {
