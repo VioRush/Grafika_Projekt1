@@ -354,50 +354,33 @@ namespace Grafika_Projekt1
 
                 else if (SelectedFigure == "Polygon")
                 {
-                    /*
-                    Polygon polygon = (Polygon)figure;
-                    var points = polygon.Points.ToArray();
                     if (Resizing)
                     {
-                        for (int i = 0; i < points.Length; i++)
+                        pX0 = e.GetPosition(canvas).X;
+                        pY0 = e.GetPosition(canvas).Y;
+
+                        Console.WriteLine("Start point xf, yf(start (figura)): " + xf + " " + yf);
+                        Console.WriteLine("Wartości px, py(start (figura)): " + pX + " " + pY);
+                        Console.WriteLine("Wartości px0, py0(koniec (figura)): " + pX0 + " " + pY0);
+                        Console.WriteLine("px0-xf: " + (pX0 - xf));
+                        Console.WriteLine("px-xf: " + (pX - xf));
+                        double scale = Math.Sqrt((pX0 - xf) / (pX - xf));
+                        Console.WriteLine("sc: " + scale);
+                        if (scale == '?')
                         {
-                            if (points[i].X != pX)
-                            {
-                                Point p = new Point(points[i].X+((pX0-xf)/(pX-xf)), points[i].Y + ((pY0 - yf) / (pY - yf)));
-                                Console.WriteLine("p: " + p.X + ", " + p.Y);
-                                //points[i].X = pX0;
-                                //points[i].Y = pY0;
-                                polygon.Points[i] = p;
-                            }
-                            else
-                            {
-                                Point p = new Point(pX0, pY0);
-                                //points[i].X = pX0;
-                                //points[i].Y = pY0;
-                                polygon.Points[i] = p;
-                            }
+                            scale = 1;
+
                         }
-                        /*
-                        double scaleX = 0, scaleY = 0;
-                        int idx = 0;
+                        Console.WriteLine("scale: " + scale);
+                        Polygon polygon = (Polygon)figure;
                         var points = polygon.Points.ToArray();
-                        
-                        for(int i=0; i< points.Length; i++)
-                        {
-                            if(points[i].X == pX)
-                            {
-                                scaleX = (pX0 - xf) / (points[i].X - xf);
-                                scaleY = (pY0 - xf) / (points[i].Y - yf);
-                                Console.WriteLine("scale: " + scaleX + ", " + scaleY);
-                                idx = i;
-                            }
-                        }
                         for (int i = 0; i < points.Length; i++)
                         {
                             if (points[i].X != pX)
                             {
-                                var x_new = xf + (points[i].X - xf) * scaleX;
-                                var y_new = yf + (points[i].Y - yf) * scaleY;
+                                var x_new = xf + (points[i].X - xf) * Math.Max((pX0 - xf) / (pX - xf), 0.2);
+                                var y_new = yf + (points[i].Y - yf) * Math.Max((pX0 - xf) / (pX - xf), 0.2);
+                                Console.WriteLine("Wartości new): " + x_new + " " + y_new);
                                 Point p = new Point(x_new, y_new);
                                 //points[i].X = pX0;
                                 //points[i].Y = pY0;
@@ -411,12 +394,11 @@ namespace Grafika_Projekt1
                                 polygon.Points[i] = p;
                             }
                         }
-                    
-                    }*/
+                    }
                 }
 
-                //pX = pX0;
-                //pY = pY0;
+                pX = pX0;
+                pY = pY0;
             }
 
         }
@@ -424,6 +406,7 @@ namespace Grafika_Projekt1
         private void MouseUp_Event(object sender, MouseButtonEventArgs e)
         {
             Dragging = false;
+            /*
             double pX0 = e.GetPosition(canvas).X;
             double pY0 = e.GetPosition(canvas).Y;
             if (SelectedFigure == "Polygon" && Resizing)
@@ -463,7 +446,7 @@ namespace Grafika_Projekt1
                         polygon.Points[i] = p;
                     }
                 }
-            }
+            }*/
         }
 
         private void UpdateCurve()
