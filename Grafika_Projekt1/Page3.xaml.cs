@@ -29,7 +29,7 @@ namespace Grafika_Projekt1
         List<Point> polygonPoints = new List<Point>();
         double pX, pY, p1X, p1Y, p2X, p2Y, p3X, p3Y, p4X, p4Y, t, xf, yf;
         int degree;
-        bool Dragging = false, Resizing = false;
+        bool Dragging = false, Resizing = false, Rotating = false;
         string SelectedFigure;
 
         public Page3()
@@ -318,13 +318,17 @@ namespace Grafika_Projekt1
                         }
                     }
                 }
-
+            }
+            if (Rotation.IsChecked == true)
+            {
+                Rotating = true;
+                SelectedFigure = "Polygon";
             }
         }
 
         private void MouseMove_Event(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed && (Dragging || Resizing))
+            if (e.LeftButton == MouseButtonState.Pressed && (Dragging || Resizing || Rotating))
             {
                 double pX0 = e.GetPosition(figure).X;
                 double pY0 = e.GetPosition(figure).Y;
@@ -354,7 +358,7 @@ namespace Grafika_Projekt1
 
                 else if (SelectedFigure == "Polygon")
                 {
-                    if (Resizing)
+                    if (Resizing && Resize.IsChecked == true)
                     {
                         pX0 = e.GetPosition(canvas).X;
                         pY0 = e.GetPosition(canvas).Y;
@@ -395,8 +399,36 @@ namespace Grafika_Projekt1
                             }
                         }
                     }
-                }
+                    if (Rotating && Rotation.IsChecked == true)
+                    {
+                        pX0 = e.GetPosition(canvas).X;
+                        pY0 = e.GetPosition(canvas).Y;
 
+                        int alfa = Int32.Parse(Stopień.Text);
+
+                        Polygon polygon = (Polygon)figure;
+                        var points = polygon.Points.ToArray();
+
+                        for (int i = 0; i < points.Length; i++)
+                        {
+                            if (points[i].X != pX)
+                            {
+                                var x_new = pX0 + ((points[i].X - pX0) * Math.Cos((Math.PI / 180) * alfa)) - ((points[i].Y - pY0) * Math.Sin((Math.PI / 180) * alfa));
+                                var y_new = pY0 + ((points[i].X - pX0) * Math.Sin((Math.PI / 180) * alfa)) + ((points[i].Y - pY0) * Math.Cos((Math.PI / 180) * alfa));
+
+                                Point p = new Point(x_new, y_new);
+                                polygon.Points[i] = p;
+                            }
+                            else
+                            {
+                                Point p = new Point(pX0, pY0);
+                                //points[i].X = pX0;
+                                //points[i].Y = pY0;
+                                polygon.Points[i] = p;
+                            }
+                        }
+                    }
+                }
                 pX = pX0;
                 pY = pY0;
             }
