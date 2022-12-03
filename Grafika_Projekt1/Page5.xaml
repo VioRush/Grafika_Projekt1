@@ -1,0 +1,48 @@
+﻿<Page x:Class="Grafika_Projekt1.Page5"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Grafika_Projekt1"
+      mc:Ignorable="d" 
+      Title="Page5" Height="616" Width="1281">
+
+    <Grid Background="White" Name="MainGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0" Grid.ColumnSpan="2" Name="Main_Menu"  
+              VerticalAlignment="Top" HorizontalAlignment="Left"   
+              Width="{Binding ElementName=MainGrid,Path=ActualWidth}"
+              RenderTransformOrigin="0.5,0.5" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+
+            <!--Plik-->
+            <MenuItem Header="_Plik" VerticalAlignment="Center" >
+                <MenuItem Header="_Wczytaj" Click="Wczytaj_Click" />
+                <MenuItem Header="_Zapisz" Click="Zapisz_Click">
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="_Wyjście" Click="Exit_Click" />
+            </MenuItem>
+            <MenuItem Header="_Zadania" VerticalAlignment="Center">
+                <MenuItem Header="Edytor" Click="Button_Click_Back"/>
+            </MenuItem>
+        </Menu>
+        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical"
+                    Background="Bisque" Grid.ColumnSpan="2" Margin="0,0.4,992.8,0">
+            <Border BorderBrush="Black" BorderThickness="1" Height="598"/>
+        </StackPanel>
+        <Grid Name="ImageGrid"  HorizontalAlignment="Left" VerticalAlignment="Center" 
+                  Width="978" Height="578" Grid.Row="1" Grid.Column="1" Margin="293,10.4,0,10">
+            <Image x:Name="image" HorizontalAlignment="Left" VerticalAlignment="Top" Cursor="Cross" Stretch="None" Height="500" Width="456" Margin="34,0,0,0"/>
+            <Image x:Name="image2" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Cross" Stretch="None" Height="500" Width="450" Margin="0,0,33,0"/>
+
+        </Grid>
+    </Grid>
+</Page>
