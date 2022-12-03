@@ -163,5 +163,13 @@ namespace Grafika_Projekt1
         {
             System.Windows.Application.Current.Shutdown();
         }
+
+        private void Do_Click(object sender, RoutedEventArgs e)
+        {
+            if(DylatacjaRadioButton.IsChecked == true)
+            {
+
+            }
+        }
     }
 }
