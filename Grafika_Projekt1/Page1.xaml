@@ -38,6 +38,7 @@
                 <MenuItem Header="_RGB oraz CMYK" Click="Button_New_Page"/>
                 <MenuItem Header="_Histogram i Binaryzacja" Click="Button_New_Page_4"/>
                 <MenuItem Header="_Krzywe Beziera" Click="Button_Bezier"/>
+                <MenuItem Header="Operacje morfologiczne" Click="Button_opMorfologiczne"/>
             </MenuItem>
         </Menu>
 

@@ -399,6 +399,20 @@ namespace Grafika_Projekt1
                             }
                         }
                     }
+                    if (Dragging && Drag.IsChecked == true)
+                    {
+                        Polygon polygon = (Polygon)figure;
+                        if (Dragging)
+                        {
+                            var points = polygon.Points.ToArray();
+                            for (int i = 0; i < points.Length; i++)
+                            {
+                                Point p = new Point(points[i].X + (pX0 - pX), points[i].Y + (pY0 - pY));
+
+                                polygon.Points[i] = p;
+                            }
+                        }
+                    }
                     if (Rotating && Rotation.IsChecked == true)
                     {
                         pX0 = e.GetPosition(canvas).X;
@@ -432,7 +446,78 @@ namespace Grafika_Projekt1
                 pX = pX0;
                 pY = pY0;
             }
+        }
+        private void Rotation_Click(object sender, RoutedEventArgs e)
+        {
+            int alfa = Int32.Parse(Stopień.Text);
 
+            Polygon polygon = (Polygon)figure;
+            var points = polygon.Points.ToArray();
+
+            for (int i = 0; i < points.Length; i++)
+            {
+                if (points[i].X != pX)
+                {
+                    var x_new = p1X + ((points[i].X - p1X) * Math.Cos((Math.PI / 180) * alfa)) - ((points[i].Y - p1Y) * Math.Sin((Math.PI / 180) * alfa));
+                    var y_new = p1Y + ((points[i].X - p1X) * Math.Sin((Math.PI / 180) * alfa)) + ((points[i].Y - p1Y) * Math.Cos((Math.PI / 180) * alfa));
+
+                    Point p = new Point(x_new, y_new);
+                    polygon.Points[i] = p;
+                }
+                else
+                {
+                    Point p = new Point(p1X, p1Y);
+                    //points[i].X = pX0;
+                    //points[i].Y = pY0;
+                    polygon.Points[i] = p;
+                }
+            }
+        }
+        private void Rotation_Click_Minus(object sender, RoutedEventArgs e)
+        {
+            int alfa = Int32.Parse(Stopień.Text) - (Int32.Parse(Stopień.Text) * 2);
+
+            Polygon polygon = (Polygon)figure;
+            var points = polygon.Points.ToArray();
+
+            for (int i = 0; i < points.Length; i++)
+            {
+                if (points[i].X != pX)
+                {
+                    var x_new = p1X + ((points[i].X - p1X) * Math.Cos((Math.PI / 180) * alfa)) - ((points[i].Y - p1Y) * Math.Sin((Math.PI / 180) * alfa));
+                    var y_new = p1Y + ((points[i].X - p1X) * Math.Sin((Math.PI / 180) * alfa)) + ((points[i].Y - p1Y) * Math.Cos((Math.PI / 180) * alfa));
+
+                    Point p = new Point(x_new, y_new);
+                    polygon.Points[i] = p;
+                }
+                else
+                {
+                    Point p = new Point(p1X, p1Y);
+                    //points[i].X = pX0;
+                    //points[i].Y = pY0;
+                    polygon.Points[i] = p;
+                }
+            }
+        }
+        private void Button_Click_Edit(object sender, RoutedEventArgs e)
+        {
+            Dragging = true;
+
+            pX = double.Parse(addX.Text);
+            pY = double.Parse(addY.Text);
+
+            Polygon polygon = (Polygon)figure;
+            if (Dragging)
+            {
+                var points = polygon.Points.ToArray();
+                for (int i = 0; i < points.Length; i++)
+                {
+                    Point p = new Point(points[i].X + pX, points[i].Y + pY);
+
+                    polygon.Points[i] = p;
+                }
+            }
+            Dragging = false;
         }
 
         private void MouseUp_Event(object sender, MouseButtonEventArgs e)
@@ -511,21 +596,31 @@ namespace Grafika_Projekt1
             }
         }
 
+
+
         private void ScalePoint_Click(object sender, MouseButtonEventArgs e)
         {
-            xf = e.GetPosition(canvas).X;
-            yf = e.GetPosition(canvas).Y;
-            Console.WriteLine("xf,yf: " + xf + ", " + yf);
-            pointLabel.Visibility = Visibility.Visible;
-            pointX.Visibility = Visibility.Visible;
-            pointX.Text = xf.ToString();
-            pointY.Visibility = Visibility.Visible;
-            pointY.Text =yf.ToString();
-            EditButton.Visibility = Visibility.Hidden;
-            AddButton.Visibility = Visibility.Hidden;
-            ScaleButton.Visibility = Visibility.Visible;
-            sLabel.Visibility = Visibility.Visible;
-            s.Visibility = Visibility.Visible;
+            if (Resize.IsChecked == true)
+            {
+                xf = e.GetPosition(canvas).X;
+                yf = e.GetPosition(canvas).Y;
+                Console.WriteLine("xf,yf: " + xf + ", " + yf);
+                pointLabel.Visibility = Visibility.Visible;
+                pointX.Visibility = Visibility.Visible;
+                pointX.Text = xf.ToString();
+                pointY.Visibility = Visibility.Visible;
+                pointY.Text = yf.ToString();
+                EditButton.Visibility = Visibility.Hidden;
+                AddButton.Visibility = Visibility.Hidden;
+                ScaleButton.Visibility = Visibility.Visible;
+                sLabel.Visibility = Visibility.Visible;
+                s.Visibility = Visibility.Visible;
+            }
+            else if (Rotation.IsChecked == true)
+            {
+                p1X = e.GetPosition(canvas).X;
+                p1Y = e.GetPosition(canvas).Y;
+            }
         }
 
         private void Draw_Click(object sender, RoutedEventArgs e)

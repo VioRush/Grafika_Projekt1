@@ -1672,6 +1672,11 @@ namespace Grafika_Projekt1
             NavigationService.Navigate(new Page3());
         }
 
+        private void Button_opMorfologiczne(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Page5());
+        }
+
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
             System.Windows.Application.Current.Shutdown();
