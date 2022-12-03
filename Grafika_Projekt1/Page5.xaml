@@ -35,11 +35,11 @@
             </MenuItem>
         </Menu>
         <Border Grid.Row="1" Grid.Column="0" BorderBrush="Black" BorderThickness="1" Margin="0,18,0,0" HorizontalAlignment="Left" Width="278">
-            <Grid
-                    Background="Bisque" Grid.ColumnSpan="2" Margin="0.2,-0.8,-0.2,0.6" HorizontalAlignment="Left" Width="276">
-                <RadioButton Grid.Row="0" Content="Dylatacja" GroupName="Norm"
-            x:Name="DylatacjaRadioButton" Margin="10,10,-10,-10"></RadioButton>
-                <Button x:Name="DoButton" Content="Wykonaj" Height="24" Width="76" Click="Do_Click" Margin="103,56,97,517" />
+            <Grid Background="Bisque" Grid.ColumnSpan="2" Margin="0.2,-0.8,-0.2,0.6" HorizontalAlignment="Left" Width="276">
+                <RadioButton Grid.Row="0" Content="Dylatacja" GroupName="Norm" x:Name="DylatacjaRadioButton" Margin="10,10,-10,-10"></RadioButton>
+                <RadioButton Grid.Row="1" Content="Otwarcie" GroupName="Norm" x:Name="OtwarcieRadioButton" Margin="10,30,-10,-10"></RadioButton>
+                <RadioButton Grid.Row="2" Content="Pocienianie" GroupName="Norm" x:Name="PocienianieRadioButton" Margin="10,50,-10,-10"></RadioButton>
+                <Button x:Name="DoButton" Content="Wykonaj" Height="24" Width="76" Click="Do_Click" Margin="99,106,101,467" />
             </Grid>
         </Border>
         <Grid Name="ImageGrid"  HorizontalAlignment="Left" VerticalAlignment="Center" 

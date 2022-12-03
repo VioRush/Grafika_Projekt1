@@ -31,6 +31,16 @@ namespace Grafika_Projekt1
         Bitmap copy;
         int[,] values;
 
+        //thinning masks
+        int[,] mask1 = { { 0, 0, 0 }, { -1, 1, -1 }, { 1, 1, 1 } };
+        int[,] mask2 = { { 1, -1, 0 }, { 1, 1, 0 }, { 1, -1, 0 } };
+        int[,] mask3 = { { 1, 1, 1 }, { -1, 1, -1 }, { 0, 0, 0 } };
+        int[,] mask4 = { { 0, -1, 1 }, { 0, 1, 1 }, { 0, -1, 1 } };
+        int[,] mask5 = { { -1, 0, 0 }, { 1, 1, 0 }, { -1, 1, -1 } };
+        int[,] mask6 = { { -1, 1, -1 }, { 1, 1, 0 }, { -1, 0, 0 } };
+        int[,] mask7 = { { -1, 1, -1 }, { 0, 1, 1 }, { 0, 0, -1 } };
+        int[,] mask8 = { { 0, 0, -1 }, { 0, 1, 1 }, { -1, 1, -1 } };
+
         public Page5()
         {
             InitializeComponent();
@@ -156,7 +166,7 @@ namespace Grafika_Projekt1
         }
 
         #region Filters
-        private void Dylatacja()
+        private Bitmap Dylatacja(Bitmap copy)
         {
             int[,] mask = new int[3, 3];
             for (int i = 0; i < 3; i++)
@@ -171,7 +181,7 @@ namespace Grafika_Projekt1
             int height = copy.Height;
             int width = copy.Width;
             var pom = new int[copy.Height, copy.Width];
-            UstawJedynki();
+            UstawJedynki(copy);
 
             for (int i = 1; i < height - 1; i++)
             {
@@ -193,13 +203,14 @@ namespace Grafika_Projekt1
                     
                 }
             }
-            Pokoloruj(pom);
-            filteredImage = BitmapToImage(copy);
-            toSave = filteredImage;
-            image2.Source = filteredImage;
+
+            copy = Pokoloruj(pom, copy);
+
+            return copy;
+           
         }
 
-        private void Pokoloruj(int[,] pom)
+        private Bitmap Pokoloruj(int[,] pom, Bitmap copy)
         {
             for (int i = 0; i < copy.Height; i++)
             {
@@ -215,11 +226,139 @@ namespace Grafika_Projekt1
                     }
                 }
             }
+
+            return copy;
+        }
+
+        private Bitmap Otwarcie(Bitmap copy)
+        {
+            //Erozja();
+            // Dylatacja();
+            return copy;//Dylatacja(Erozja(copy));
+        }
+
+        private Bitmap Pocienianie(Bitmap copy)
+        {
+            List<int[,]> masks = new List<int[,]>();
+
+            masks.Add(mask1);
+            masks.Add(mask2);
+            masks.Add(mask3);
+            masks.Add(mask4);
+            masks.Add(mask5);
+            masks.Add(mask6);
+            masks.Add(mask7);
+            masks.Add(mask8);
+
+            values = new int[copy.Height, copy.Width];
+            int height = copy.Height;
+            int width = copy.Width;
+            UstawJedynki(copy);
+
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    Console.Write(values[i, j] + " ");
+                }
+                Console.WriteLine();
+            }
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+
+            var repeat = true;
+
+            do
+            {
+                repeat = false;
+
+                for (int m = 0; m < 8; m++)
+                {
+                    for (int i = 1; i < height - 1; i++)
+                    {
+                        for (int j = 1; j < width - 1; j++)
+                        {
+                            if (values[i, j] == 1)
+                            {
+                                var eq = true;
+                                int rm = 0, cm = 0;
+                                for(int r = i - 1; r <= i + 1; r++)
+                                {
+                                    cm = 0;
+                                    for (int c = j - 1; c <= j + 1; c++)
+                                    {
+                                        if(values[r,c] != masks[m][rm, cm])
+                                        {
+                                            if (masks[m][rm, cm] >= 0)
+                                            {
+                                                Console.WriteLine("not eq: " + values[r, c] + "!=" + masks[m][rm, cm]);
+                                                eq = false;
+                                            }
+                        
+                                        }
+                                        cm++;
+                                    }
+                                    rm++;
+                                }
+
+                                if (eq == true)
+                                {
+                                    Console.WriteLine("zmieniono");
+                                    values[i, j] = 0;
+                                    repeat = true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            } while (repeat);
+
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    Console.Write(values[i, j] + " ");
+                }
+                Console.WriteLine();
+            }
+
+            copy = Pokoloruj(values, copy);
+
+            return copy;
         }
 
         #endregion
 
-        private void UstawJedynki()
+        private void Do_Click(object sender, RoutedEventArgs e)
+        {
+            if (DylatacjaRadioButton.IsChecked == true)
+            {
+                BitmapCopy();
+                filteredImage = BitmapToImage(Dylatacja(copy));
+                toSave = filteredImage;
+                image2.Source = filteredImage;
+            }
+            else if (OtwarcieRadioButton.IsChecked == true)
+            {
+                BitmapCopy();
+                filteredImage = BitmapToImage(Otwarcie(copy));
+                toSave = filteredImage;
+                image2.Source = filteredImage;
+            }
+            else if (PocienianieRadioButton.IsChecked == true)
+            {
+                BitmapCopy();
+                filteredImage = BitmapToImage(Pocienianie(copy));
+                toSave = filteredImage;
+                image2.Source = filteredImage;
+            }
+        }
+
+        private void UstawJedynki(Bitmap copy)
         {
             for (int i = 0; i < copy.Height; i++)
             {
@@ -248,12 +387,5 @@ namespace Grafika_Projekt1
             System.Windows.Application.Current.Shutdown();
         }
 
-        private void Do_Click(object sender, RoutedEventArgs e)
-        {
-            if(DylatacjaRadioButton.IsChecked == true)
-            {
-                Dylatacja();
-            }
-        }
     }
 }
