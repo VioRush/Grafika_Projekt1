@@ -49,7 +49,8 @@ namespace Grafika_Projekt1
 
             }
             loadedImage = new BitmapImage(filePath);
-            image.Source = loadedImage;
+            //image.Source = loadedImage;
+            Binaryzacja();
         }
 
         private void Zapisz_Click(object sender, RoutedEventArgs e)
@@ -113,6 +114,45 @@ namespace Grafika_Projekt1
             }
         }
         #endregion
+
+        public void Binaryzacja()
+        {
+            if (loadedImage != null)
+            {
+                BitmapCopy();
+
+                var data = copy.LockBits(new System.Drawing.Rectangle(0, 0, copy.Width, copy.Height),
+                System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                System.Drawing.Imaging.PixelFormat.Format24bppRgb
+                );
+
+                var copyData = new byte[data.Stride * data.Height];
+
+                Marshal.Copy(data.Scan0, copyData, 0, copyData.Length);
+                // Przerzuci z Bitmapy do tablicy
+
+                for (int i = 0; i < copyData.Length; i += 3)
+                {
+                    byte r = copyData[i + 0];
+                    byte g = copyData[i + 1];
+                    byte b = copyData[i + 2];
+                    byte mean = (byte)((r + g + b) / 3);
+                    copyData[i + 0] =
+                    copyData[i + 1] =
+                    copyData[i + 2] = mean > 128
+                        ? byte.MaxValue
+                        : byte.MinValue;
+                }
+
+                Marshal.Copy(copyData, 0, data.Scan0, copyData.Length);
+                // Przerzuci z tablicy do Bitmapy
+
+                copy.UnlockBits(data);
+                loadedImage = BitmapToImage(copy);
+                toSave = loadedImage;
+                image.Source = loadedImage;
+            }
+        }
 
         private void Button_Click_Back(object sender, RoutedEventArgs e)
         {
