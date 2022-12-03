@@ -34,7 +34,7 @@
                 <MenuItem Header="Edytor" Click="Button_Click_Back"/>
             </MenuItem>
         </Menu>
-        <Border Grid.Row="1" Grid.Column="0" BorderBrush="Black" BorderThickness="1" Margin="0,18,1058,0">
+        <Border Grid.Row="1" Grid.Column="0" BorderBrush="Black" BorderThickness="1" Margin="0,18,0,0" HorizontalAlignment="Left" Width="278">
             <Grid
                     Background="Bisque" Grid.ColumnSpan="2" Margin="0.2,-0.8,-0.2,0.6" HorizontalAlignment="Left" Width="276">
                 <RadioButton Grid.Row="0" Content="Dylatacja" GroupName="Norm"
@@ -43,7 +43,7 @@
             </Grid>
         </Border>
         <Grid Name="ImageGrid"  HorizontalAlignment="Left" VerticalAlignment="Center" 
-                  Width="978" Height="578" Grid.Row="1" Grid.Column="1" Margin="292.8,19,-1270.8,19">
+                  Width="998" Height="583" Grid.Row="1" Margin="283,23,0,10" >
             <Image x:Name="image" HorizontalAlignment="Left" VerticalAlignment="Top" Cursor="Cross" Stretch="None" Height="500" Width="456" Margin="34,0,0,0"/>
             <Image x:Name="image2" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Cross" Stretch="None" Height="500" Width="450" Margin="0,0,33,0"/>
         </Grid>

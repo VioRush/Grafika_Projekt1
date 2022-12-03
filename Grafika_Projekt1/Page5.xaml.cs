@@ -29,6 +29,7 @@ namespace Grafika_Projekt1
         BitmapImage filteredImage;
         BitmapImage toSave;
         Bitmap copy;
+        int[,] values;
 
         public Page5()
         {
@@ -154,6 +155,89 @@ namespace Grafika_Projekt1
             }
         }
 
+        #region Filters
+        private void Dylatacja()
+        {
+            int[,] mask = new int[3, 3];
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    mask[i, j] = 1;
+                }
+            }
+
+            values = new int[copy.Height, copy.Width];
+            int height = copy.Height;
+            int width = copy.Width;
+            var pom = new int[copy.Height, copy.Width];
+            UstawJedynki();
+
+            for (int i = 1; i < height - 1; i++)
+            {
+                for (int j = 1; j < width - 1; j++)
+                {
+                    var liczba = 0;
+                    for(int x = i - 1; x <= i + 1; x++)
+                    {
+                        for (int y = j - 1; y <= j + 1; y++)
+                        {
+                            if (values[x, y] == 1)
+                            {
+                                liczba++;
+                            }
+                        }
+                    }
+                    if (liczba >= 1) pom[i, j] = 1;
+                    else pom[i, j] = 0;
+                    
+                }
+            }
+            Pokoloruj(pom);
+            filteredImage = BitmapToImage(copy);
+            toSave = filteredImage;
+            image2.Source = filteredImage;
+        }
+
+        private void Pokoloruj(int[,] pom)
+        {
+            for (int i = 0; i < copy.Height; i++)
+            {
+                for (int j = 0; j < copy.Width; j++)
+                {
+                    if (pom[i, j] == 1)
+                    {
+                        copy.SetPixel(j, i, System.Drawing.Color.Black);
+                    }
+                    else if (pom[i, j] == 0)
+                    {
+                        copy.SetPixel(j, i, System.Drawing.Color.White);
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        private void UstawJedynki()
+        {
+            for (int i = 0; i < copy.Height; i++)
+            {
+                for (int j = 0; j < copy.Width; j++)
+                {
+                    System.Drawing.Color kolor = copy.GetPixel(j, i);
+                    if (kolor.R == 0 && kolor.G == 0 && kolor.B == 0)
+                    {
+                        values[i, j] = 1;
+                    }
+                    else
+                    {
+                        values[i, j] = 0;
+                    }
+                }
+            }
+        }
+
         private void Button_Click_Back(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Page1());
@@ -168,7 +252,7 @@ namespace Grafika_Projekt1
         {
             if(DylatacjaRadioButton.IsChecked == true)
             {
-
+                Dylatacja();
             }
         }
     }
